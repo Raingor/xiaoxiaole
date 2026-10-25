@@ -46,3 +46,5 @@
 - Raingor/xiaoxiaole 当前不存在，可以安全创建新仓库。
 - 部署工作流采用 Node 24，官方 Actions 版本通过 GitHub API 核验并固定 SHA；发布路径为 /xiaoxiaole/。
 - 已适配 favicon 的 BASE_URL，并忽略生成截图、依赖、构建产物及环境变量文件。
+
+- GitHub Pages 的 workflow 模式与 HTTPS 均已验证启用。线上实际交换和存档恢复通过，/xiaoxiaole/ 子路径资源无 404。

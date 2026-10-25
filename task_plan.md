@@ -17,8 +17,8 @@
 
 ## 追加阶段：GitHub 与 Pages 部署
 9. [complete] 检查认证与源码，适配 Pages 子路径，准备自动部署。
-10. [in_progress] 创建 GitHub 仓库，提交并推送源码，启用 Pages。
-11. [pending] 等待自动部署并验证线上游戏，记录仓库和站点地址。
+10. [complete] 创建 GitHub 仓库，提交并推送源码，启用 Pages。
+11. [complete] 等待自动部署并验证线上游戏，记录仓库和站点地址。
 
 ## 决策
 - 先沿用现有项目技术栈；空目录采用轻量可运行 Web 项目。
@@ -42,3 +42,9 @@
 - 八张透明 2D 图片已接入全部角色展示，旧 3D 图不再加载。
 - 生产构建、桌面/手机视觉检查、六人图鉴与八张透明通道检查、实际交换得分验证通过，无浏览器异常。
 - 来源和完整提示词已存档，更新已成功写入 pi-hermes-memory。
+
+## GitHub Pages 部署交付
+- 仓库：https://github.com/Raingor/xiaoxiaole （public，main）。
+- 线上游戏：https://raingor.github.io/xiaoxiaole/ ，HTTPS 已启用。
+- 首次 Actions：https://github.com/Raingor/xiaoxiaole/actions/runs/40208190337 ，测试、构建、发布全部成功。
+- 线上验证 HTTP 200、64棋子与六人图鉴、2D素材路径、交换得分、刷新恢复、390px手机布局全部通过，资源失败与浏览器异常均为0。

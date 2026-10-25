@@ -45,3 +45,11 @@
 
 - GitHub Pages 子路径构建和22项规则测试通过。独立浏览器验证 /xiaoxiaole/ 下64棋子、所有2D图片、favicon、实际交换计分正常，无失败请求或异常。
 - 提交前源码扫描未发现密钥，生成截图与环境变量文件已忽略。
+
+- 已创建公开仓库 https://github.com/Raingor/xiaoxiaole 并推送 main，origin 使用不含凭据的标准 HTTPS 地址。
+- GitHub Pages 已启用 workflow 模式，站点地址 https://raingor.github.io/xiaoxiaole/ 。认证仅通过进程环境提供，未持久化密钥。
+- 正在等待首个 Actions 部署并准备线上验证。
+
+- 首次 GitHub Actions 测试、构建、配置与发布全部成功。
+- 线上站点 HTTP 200；已实测64个2D棋子、六人图鉴、有效交换耗一步并计分、刷新存档恢复、390px手机布局，资源失败与浏览器异常0。
+- Pages URL：https://raingor.github.io/xiaoxiaole/ ；仓库：https://github.com/Raingor/xiaoxiaole 。已启用 HTTPS；main 后续推送自动部署。
