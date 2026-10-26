@@ -80,3 +80,5 @@
 - 已搜索并选用Tenor现成Joke Bear Dance动图，原样下载，不重绘；来源记录在references/characters/celebration-source.json。胜利窗播放原始GIF，减少动态效果时隐藏GIF显示静态熊。
 
 - 本地验证原始GIF200×158正常播放；360×640下一关按钮完整可见、无横向溢出；减少动态效果模式显示静态熊，进入下一站清理全部欢呼DOM，无浏览器异常。
+
+- 真实线上复核通过：HTTP200，胜利弹窗加载/xiaoxiaole/characters-2d/joke-bear-victory.gif和Tenor来源，下一关后欢呼移除，浏览器异常0。
