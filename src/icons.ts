@@ -24,3 +24,6 @@ const paths: Record<string, string> = {
   trophy: '<path d="M8 3h8v6a4 4 0 0 1-8 0zm8 2h5v2a5 5 0 0 1-5 5M8 5H3v2a5 5 0 0 0 5 5m4 1v5m-5 3h10m-9-3h8"/>',
 };
 export const icon = (name: string, cls = '') => `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] ?? paths.star}</svg>`;
+
+/** Compact, font-independent arrows for straight-line special tiles. */
+export const directionIcon = (direction: 'row' | 'column') => `<svg class="direction-icon" viewBox="0 0 ${direction === 'row' ? '28 14' : '14 28'}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g${direction === 'column' ? ' transform="translate(14 0) rotate(90)"' : ''}><path d="M5 7h18M9 3 5 7l4 4m10-8 4 4-4 4"/></g></svg>`;
