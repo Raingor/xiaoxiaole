@@ -1,5 +1,9 @@
 # 发现与设计依据
 
+## 2026-10-26 线上发布确认
+- GitHub网络恢复，所有箭头、渐进关卡、熊形炸弹和独立造型更新已发布至 https://raingor.github.io/xiaoxiaole/ 。
+- Actions 40343482302成功。真实线上验证25棋子新手关、18站地图、9身份图鉴、新造型图片和熊形炸弹连锁，无404或浏览器异常；报告位于artifacts/live-release-report.json。
+
 ## 熊熊炸弹与独立造型交付
 - 内置image_gen生成三款透明2D造型：雨衣熊、睡衣熊、忍者熊。素材保存在public/characters-2d，提示词与生成源路径见references/characters/bear-outfit-prompts.json。
 - 熊形炸弹独立图片生成连接失败，最终采用现有classic.png配原生炸弹外框、熊耳与SVG导火线；没有缺失图片请求，游戏图标画风统一。
