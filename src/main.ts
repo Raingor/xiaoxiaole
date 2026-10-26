@@ -3,6 +3,7 @@ import './style.css';
 import { Game, LEVELS, adjacent, type Goal, type Wave } from './engine';
 import { FRIENDS, loadPortraits } from './friends';
 import { icon, directionIcon } from './icons';
+import { preloadCelebration, victoryCelebration } from './celebration';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
@@ -230,7 +231,7 @@ async function finish(won: boolean) {
     save.unlocked = Math.min(LEVELS.length, Math.max(save.unlocked, game.level.id + 1));
     if (firstClear) { save.inventory.hammer++; save.inventory.shuffle++; }
     renderStats(); persist(); sound('win');
-    openDialog(`<div class="result-art">${photo(3)}<span>✦</span>${photo(0)}</div><div class="modal-eyebrow">HAPPINESS ARRIVED</div><h2>${game.level.id === LEVELS.length ? '快乐全线，顺利通车！' : '好心情，成功到站！'}</h2><p class="modal-subtitle">第 ${game.level.id} 站 · ${game.level.name}</p><div class="result-stars">${[1, 2, 3].map(n => icon('star', n <= game.stars ? 'earned' : '')).join('')}</div><div class="result-score">${game.score.toLocaleString()}<span>本次得分 · 含剩余步数奖励 ${game.moves * 60}</span></div><p class="reward-note">${firstClear ? '首次到站礼物：小木锤 +1 · 大洗牌 +1' : '每次相遇，都有新的小快乐'}</p><button class="primary-button" data-action="next">${game.level.id === LEVELS.length ? '再来一趟快乐旅程' : '前往下一站'} ${icon('arrow')}</button><button class="secondary-button" data-action="result-map">看看旅程地图</button>`, 'win');
+    openDialog(`${victoryCelebration()}<div class="modal-eyebrow">HAPPINESS ARRIVED</div><h2>${game.level.id === LEVELS.length ? '快乐全线，顺利通车！' : '好心情，成功到站！'}</h2><p class="modal-subtitle">第 ${game.level.id} 站 · ${game.level.name}</p><div class="result-stars">${[1, 2, 3].map(n => icon('star', n <= game.stars ? 'earned' : '')).join('')}</div><div class="result-score">${game.score.toLocaleString()}<span>本次得分 · 含剩余步数奖励 ${game.moves * 60}</span></div><p class="reward-note">${firstClear ? '首次到站礼物：小木锤 +1 · 大洗牌 +1' : '每次相遇，都有新的小快乐'}</p><button class="primary-button" data-action="next">${game.level.id === LEVELS.length ? '再来一趟快乐旅程' : '前往下一站'} ${icon('arrow')}</button><button class="secondary-button" data-action="result-map">看看旅程地图</button>`, 'win');
   } else {
     persist(); sound('bad');
     openDialog(`<div class="result-art solo">${photo(1)}</div><div class="modal-eyebrow">TAKE YOUR TIME</div><h2>差一点点，再试一次？</h2><p class="modal-subtitle">本站目标还没完成，伙伴们会一直陪着你。</p><div class="remaining-goals">${game.level.goals.map(g => `<span>${goalArt(g)}<b>${Math.max(0, g.target - game.progress(g)).toLocaleString()}</b><small>还需收集</small></span>`).join('')}</div>${save.inventory.moves > 0 ? `<button class="primary-button" data-action="continue">再走 5 步 <small>加五步道具 × ${save.inventory.moves}</small></button>` : ''}<button class="${save.inventory.moves > 0 ? 'secondary-button' : 'primary-button'}" data-action="retry">重新出发 ${icon('reset')}</button><button class="secondary-button" data-action="result-map">返回旅程地图</button>`, 'lose');
@@ -316,6 +317,7 @@ document.addEventListener('keydown', e => {
 window.addEventListener('pagehide', () => { if (!busy) persist(); });
 
 async function init() {
+  preloadCelebration();
   try { portraits = await loadPortraits(); }
   catch (err) {
     console.error('角色加载失败', err);
