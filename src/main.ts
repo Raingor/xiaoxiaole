@@ -27,7 +27,7 @@ try {
   }
 } catch { /* Start fresh when local storage is unavailable or malformed. */ }
 
-let game = (save.current && Game.restore(save.current)) || new Game(LEVELS[save.unlocked - 1]);
+let game = (save.current && Game.restore(save.current)) || new Game(LEVELS.find(l => l.id === save.current?.level) ?? LEVELS[save.unlocked - 1]);
 let portraits: Record<string, string> = {};
 let selected = -1, busy = true, tool = '', modal = '', hint: number[] = [], hintTimer = 0, idleTimer = 0, toastTimer = 0;
 let gesture: { index: number; x: number; y: number; pointer: number } | null = null;
@@ -73,14 +73,17 @@ function photo(kind: number, cls = '') { return `<img class="${cls}" data-charac
 function goalArt(goal: Goal) { return goal.kind === 'ice' ? `<span class="ice-goal">${icon('ice')}</span>` : goal.kind === 'score' ? `<span class="points-goal">${icon('star')}</span>` : photo(goal.kind); }
 function renderBoard(drops?: Map<number, number>) {
   const focusedCell = document.activeElement instanceof HTMLElement ? document.activeElement.dataset.cell : undefined;
-  $('#board').innerHTML = game.board.map((t, i) => t ? `<button class="tile kind-${t.kind} ${selected === i ? 'selected' : ''} ${hint.includes(i) ? 'hint' : ''} ${game.ice[i] ? 'iced ice-' + game.ice[i] : ''} ${t.special ? 'special special-' + t.special : ''} ${drops?.get(i) ? 'dropping' : ''}" data-cell="${i}" data-id="${t.id}" style="--kind:${FRIENDS[t.kind].color};--drop:${drops?.get(i) ?? 0}" aria-label="第${Math.floor(i / 8) + 1}行第${i % 8 + 1}列 ${FRIENDS[t.kind].name}${t.special ? ' ' + specialName(t.special) : ''}${game.ice[i] ? ' 冰块' : ''}" aria-pressed="${selected === i}" tabindex="0">${photo(t.kind)}${t.special === 'row' || t.special === 'column' ? `<span class="direction-badge direction-${t.special}">${directionIcon(t.special)}</span>` : t.special ? `<span class="special-symbol">${t.special === 'bomb' ? '✹' : '✦'}</span>` : ''}${game.ice[i] === 2 ? '<span class="ice-layers">Ⅱ</span>' : ''}</button>` : `<span class="empty-cell ${game.level.holes.includes(i) ? 'hole' : ''}" data-cell="${i}"></span>`).join('');
+  const size = game.level.size ?? 8;
+  $('#board').style.gridTemplateColumns = `repeat(${size},minmax(0,1fr))`;
+  $('#board').setAttribute('aria-label', `${size} 行 ${size} 列三消棋盘`);
+  $('#board').innerHTML = game.board.flatMap((t, i) => Math.floor(i / 8) >= size || i % 8 >= size ? [] : [ t ? `<button class="tile kind-${t.kind} ${selected === i ? 'selected' : ''} ${hint.includes(i) ? 'hint' : ''} ${game.ice[i] ? 'iced ice-' + game.ice[i] : ''} ${t.special ? 'special special-' + t.special : ''} ${drops?.get(i) ? 'dropping' : ''}" data-cell="${i}" data-id="${t.id}" style="--kind:${FRIENDS[t.kind].color};--drop:${drops?.get(i) ?? 0}" aria-label="第${Math.floor(i / 8) + 1}行第${i % 8 + 1}列 ${FRIENDS[t.kind].name}${t.special ? ' ' + specialName(t.special) : ''}${game.ice[i] ? ' 冰块' : ''}" aria-pressed="${selected === i}" tabindex="0">${photo(t.kind)}${t.special === 'row' || t.special === 'column' ? `<span class="direction-badge direction-${t.special}">${directionIcon(t.special)}</span>` : t.special ? `<span class="special-symbol">${t.special === 'bomb' ? '✹' : '✦'}</span>` : ''}${game.ice[i] === 2 ? '<span class="ice-layers">Ⅱ</span>' : ''}</button>` : `<span class="empty-cell ${game.level.holes.includes(i) ? 'hole' : ''}" data-cell="${i}"></span>`]).join('');
   if (focusedCell !== undefined) document.querySelector<HTMLElement>(`button[data-cell="${focusedCell}"]`)?.focus({ preventScroll: true });
 }
 function specialName(s: string) { return ({ row: '横向直线', column: '纵向直线', bomb: '爆炸特效', rainbow: '彩虹特效' } as Record<string, string>)[s]; }
 function renderStats() {
   $('#level-number').textContent = String(game.level.id).padStart(2, '0');
   $('#level-name').textContent = game.level.name;
-  $('#board-label').textContent = `LEVEL ${String(game.level.id).padStart(2, '0')}`;
+  $('#board-label').textContent = `${game.level.size}×${game.level.size} · ${game.level.kinds}位伙伴`;
   $('#moves').textContent = String(game.moves); $('#moves').classList.toggle('low', game.moves <= 5);
   $('#score').textContent = game.score.toLocaleString();
   $('#score-fill').style.width = `${Math.min(100, game.score / 120)}%`;
@@ -192,10 +195,10 @@ function openDialog(content: string, kind: string) {
 }
 function closeDialog() { if (modal === 'win' || modal === 'lose') return; modal = ''; $('#modal-root').innerHTML = ''; scheduleHint(); }
 function mapDialog() {
-  openDialog(`<div class="modal-eyebrow">THE HAPPY LINE · 01</div><h2>把快乐，一站站收集。</h2><p class="modal-subtitle">晴日出发 · ${Object.keys(save.records).length} 站已完成 / 共 12 站</p><div class="journey-map">${LEVELS.map(l => `<button class="station ${l.id === game.level.id ? 'current' : ''} ${l.id > save.unlocked ? 'locked' : ''}" data-level="${l.id}" ${l.id > save.unlocked ? 'disabled' : ''}><span class="station-circle">${l.id > save.unlocked ? icon('lock') : save.records[l.id] ? icon('check') : l.id}</span><b>${l.name}</b><span class="station-stars">${save.records[l.id] ? '★'.repeat(save.records[l.id].stars) + '☆'.repeat(3 - save.records[l.id].stars) : l.id > save.unlocked ? '待解锁' : l.id === game.level.id ? '正在停靠' : '出发吧'}</span></button>`).join('')}</div><div class="map-bottom">${icon('train')} 完成本站目标，即可解锁下一站</div>`, 'map');
+  openDialog(`<div class="modal-eyebrow">THE HAPPY LINE · 01</div><h2>把快乐，一站站收集。</h2><p class="modal-subtitle">晴日出发 · ${Object.keys(save.records).length} 站已完成 / 共 12 站</p><div class="journey-map">${LEVELS.map(l => `<button class="station ${l.id === game.level.id ? 'current' : ''} ${l.id > save.unlocked ? 'locked' : ''}" data-level="${l.id}" ${l.id > save.unlocked ? 'disabled' : ''}><span class="station-circle">${l.id > save.unlocked ? icon('lock') : save.records[l.id] ? icon('check') : l.id}</span><b>${l.name}</b><span class="station-detail">${l.size}×${l.size} · ${l.kinds}位伙伴</span><span class="station-stars">${save.records[l.id] ? '★'.repeat(save.records[l.id].stars) + '☆'.repeat(3 - save.records[l.id].stars) : l.id > save.unlocked ? '待解锁' : l.id === game.level.id ? '正在停靠' : '出发吧'}</span></button>`).join('')}</div><div class="map-bottom">${icon('train')} 完成本站目标，即可解锁下一站</div>`, 'map');
 }
 function friendsDialog() {
-  openDialog(`<div class="modal-eyebrow">MEET YOUR TRAVEL BUDDIES</div><h2>六位伙伴，一起快乐。</h2><p class="modal-subtitle">来自「地铁快跑」的熟悉面孔，全员到齐！</p><div class="friend-grid">${FRIENDS.map((f, i) => `<article class="friend-card" style="--friend-color:${f.color}"><div>${photo(i)}</div><h3>${f.name}</h3><p>${f.desc}</p><span>${game.collected[i]} 次 · 本局相遇</span></article>`).join('')}</div>`, 'friends');
+  openDialog(`<div class="modal-eyebrow">MEET YOUR TRAVEL BUDDIES</div><h2>六位伙伴，一起快乐。</h2><p class="modal-subtitle">从三位伙伴出发，第4、7、10站会遇见新朋友。</p><div class="friend-grid">${FRIENDS.map((f, i) => `<article class="friend-card ${save.unlocked < f.unlockLevel ? 'friend-locked' : ''}" style="--friend-color:${f.color}"><div>${photo(i)}</div><h3>${f.name}</h3><p>${f.desc}</p><span>${save.unlocked < f.unlockLevel ? `第 ${f.unlockLevel} 站加入` : `${game.collected[i]} 次 · 本局相遇`}</span></article>`).join('')}</div>`, 'friends');
 }
 function helpDialog() {
   openDialog(`<div class="modal-eyebrow">A LITTLE GUIDE TO HAPPINESS</div><h2>快乐，其实很简单。</h2><p class="modal-subtitle">鼠标点击两格，或在手机上轻轻滑动。</p><div class="help-list"><div><span>01</span><section><h3>交换相邻伙伴，三个相同就消除</h3><p>横向或纵向连成一线即可。无效交换会复原，不消耗步数。消除后会自动掉落，并触发连消。</p></section></div><div><span>02</span><section><h3>多连一点，惊喜多一点</h3><p>四连生成直线特效；L/T 型生成爆炸特效；五连生成彩虹特效。直线清整行或整列，爆炸清周围 3×3，彩虹与任意伙伴交换清同色。</p></section></div><div><span>03</span><section><h3>让两个特效碰个面</h3><p>两个直线组成十字；直线 + 爆炸清三行三列；双爆炸清 5×5；彩虹 + 特效让同色伙伴都带特效；双彩虹全盘消除。</p></section></div><div><span>04</span><section><h3>在步数用完前，完成本站目标</h3><p>目标可能是收集伙伴、获得分数或融化冰块。冰上的伙伴被消除，冰块就会减少一层。木锤和魔法棒不耗步数，提示永久免费。</p></section></div><div><span>⌨</span><section><h3>键盘也能出发</h3><p>Tab 选择棋子，方向键移动焦点，Enter 选中；Shift + 方向键交换相邻伙伴。Esc 取消道具或关闭窗口。进度会自动保存在当前浏览器。</p></section></div></div><button class="primary-button" data-action="close">知道啦，出发 ${icon('arrow')}</button>`, 'help');
@@ -203,7 +206,7 @@ function helpDialog() {
 function startLevel(id: number) {
   game = new Game(LEVELS[id - 1]); terminal = false; busy = false; selected = -1; tool = ''; hint = []; modal = '';
   $('#modal-root').innerHTML = ''; $('#board').classList.remove('using-tool');
-  setStatus(game.level.ice.length ? '消除冰上的伙伴，融化本站冰块' : '伙伴们准备好啦');
+  setStatus(game.level.subtitle);
   renderBoard(); renderStats(); persist(); scheduleHint();
 }
 async function finish(won: boolean) {
@@ -309,7 +312,7 @@ async function init() {
     return;
   }
   $('#hero-bear').setAttribute('src', portraits['classic-full']); $('#hero-usagi').setAttribute('src', portraits['usagi-full']);
-  renderBoard(); renderStats(); $('#loading').classList.add('loaded'); busy = false;
+  setStatus(game.level.subtitle); renderBoard(); renderStats(); $('#loading').classList.add('loaded'); busy = false;
   if (game.won || game.moves === 0) await finish(game.won);
   else { if (!game.validMoves().length) game.shuffle(); renderBoard(); persist(); scheduleHint(); }
 }

@@ -2,7 +2,7 @@ export const SIZE = 8;
 export type Special = 'row' | 'column' | 'bomb' | 'rainbow';
 export interface Tile { id: number; kind: number; special?: Special }
 export interface Goal { kind: number | 'ice' | 'score'; target: number }
-export interface Level { id: number; name: string; subtitle: string; moves: number; kinds: number; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
+export interface Level { id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
 export interface Match { cells: number[]; special?: Special; anchor: number }
 export interface Wave { removed: number[]; created: number[]; activated: number[]; iceBroken: number; points: number }
 let nextId = 1;
@@ -11,20 +11,27 @@ export const adjacent = (a: number, b: number) => Math.abs(a % SIZE - b % SIZE) 
 export const rowOf = (i: number) => Math.floor(i / SIZE);
 const area = (center: number, radius: number) => Array.from({ length: 64 }, (_, i) => i).filter(i => Math.abs(rowOf(i) - rowOf(center)) <= radius && Math.abs(i % SIZE - center % SIZE) <= radius);
 
-export const LEVELS: Level[] = [
-  { id: 1, name: '初见站台', subtitle: '和老朋友，开始一趟新旅程', moves: 26, kinds: 5, goals: [{ kind: 0, target: 18 }, { kind: 2, target: 18 }], holes: [], ice: [] },
-  { id: 2, name: '晴空小径', subtitle: '把阳光装进口袋', moves: 25, kinds: 5, goals: [{ kind: 3, target: 22 }, { kind: 1, target: 22 }], holes: [0, 7, 56, 63], ice: [] },
-  { id: 3, name: '薄荷冰站', subtitle: '消除冰块，温暖每一格', moves: 26, kinds: 5, goals: [{ kind: 'ice', target: 16 }], holes: [], ice: Array.from({ length: 16 }, (_, i) => (2 + Math.floor(i / 4)) * 8 + 2 + i % 4) },
-  { id: 4, name: '樱花转角', subtitle: '沿途都是粉色的好心情', moves: 28, kinds: 6, goals: [{ kind: 1, target: 24 }, { kind: 5, target: 24 }], holes: [0, 1, 6, 7, 56, 57, 62, 63], ice: [] },
-  { id: 5, name: '甜甜广场', subtitle: '制造特效，让快乐加倍', moves: 26, kinds: 6, goals: [{ kind: 'score', target: 6500 }], holes: [], ice: [] },
-  { id: 6, name: '云朵天桥', subtitle: '云端的冰块等你融化', moves: 28, kinds: 6, goals: [{ kind: 'ice', target: 24 }, { kind: 2, target: 20 }], holes: [0, 7, 56, 63], ice: Array.from({ length: 24 }, (_, i) => (1 + Math.floor(i / 4)) * 8 + 2 + i % 4) },
-  { id: 7, name: '落日海岸', subtitle: '下一班列车，开往橘子海', moves: 28, kinds: 6, goals: [{ kind: 0, target: 30 }, { kind: 3, target: 30 }], holes: [0, 7, 8, 15, 48, 55, 56, 63], ice: [] },
-  { id: 8, name: '星光隧道', subtitle: '双层冰块也挡不住你', moves: 30, kinds: 6, goals: [{ kind: 'ice', target: 16 }], holes: [], ice: Array.from({ length: 16 }, (_, i) => (2 + Math.floor(i / 4)) * 8 + 2 + i % 4), doubleIce: true },
-  { id: 9, name: '彩虹街区', subtitle: '五连彩虹，点亮整座城市', moves: 28, kinds: 6, goals: [{ kind: 'score', target: 10000 }, { kind: 4, target: 20 }], holes: [0, 7, 56, 63], ice: [] },
-  { id: 10, name: '月亮花园', subtitle: '和伙伴们再靠近一点', moves: 30, kinds: 6, goals: [{ kind: 1, target: 32 }, { kind: 2, target: 32 }, { kind: 5, target: 24 }], holes: [], ice: [] },
-  { id: 11, name: '银河换乘', subtitle: '用特效组合突破冰封', moves: 32, kinds: 6, goals: [{ kind: 'ice', target: 24 }, { kind: 'score', target: 9000 }], holes: [0, 7, 56, 63], ice: Array.from({ length: 24 }, (_, i) => (1 + Math.floor(i / 4)) * 8 + 2 + i % 4), doubleIce: true },
-  { id: 12, name: '快乐终点站', subtitle: '每一次出发，都值得庆祝', moves: 34, kinds: 6, goals: [{ kind: 'ice', target: 36 }, { kind: 0, target: 35 }], holes: [], ice: Array.from({ length: 36 }, (_, i) => (1 + Math.floor(i / 6)) * 8 + 1 + i % 6) },
+// Introduce one source of difficulty at a time: board size, then a new friend,
+// then obstacles. Collection totals rise by three at each stop.
+const squareIce = (count: number) => Array.from({ length: count }, (_, i) => (2 + Math.floor(i / 3)) * 8 + 2 + i % 3);
+const LEVEL_DEFINITIONS: Level[] = [
+  { id: 1, name: '初见站台', subtitle: '三位伙伴，先收集6个自嘲熊', moves: 26, size: 5, kinds: 3, goals: [{ kind: 0, target: 6 }], holes: [], ice: [] },
+  { id: 2, name: '晴空小径', subtitle: '再熟悉一点，收集9个吉伊', moves: 25, size: 5, kinds: 3, goals: [{ kind: 1, target: 9 }], holes: [], ice: [] },
+  { id: 3, name: '伙伴小站', subtitle: '棋盘变大一点，试试两个小目标', moves: 26, size: 6, kinds: 3, goals: [{ kind: 0, target: 6 }, { kind: 2, target: 6 }], holes: [], ice: [] },
+  { id: 4, name: '樱花转角', subtitle: '乌萨奇加入快乐旅程', moves: 28, size: 6, kinds: 4, goals: [{ kind: 3, target: 9 }, { kind: 1, target: 6 }], holes: [], ice: [] },
+  { id: 5, name: '甜甜广场', subtitle: '和四位伙伴一起制造连消', moves: 26, size: 6, kinds: 4, goals: [{ kind: 2, target: 9 }, { kind: 3, target: 9 }], holes: [], ice: [] },
+  { id: 6, name: '薄荷冰站', subtitle: '第一次遇见冰块，消除上面的伙伴试试', moves: 28, size: 7, kinds: 4, goals: [{ kind: 'ice', target: 6 }, { kind: 0, target: 15 }], holes: [], ice: squareIce(6) },
+  { id: 7, name: '落日海岸', subtitle: '欢迎圆滚滚的鼹鼠饼', moves: 28, size: 7, kinds: 5, goals: [{ kind: 4, target: 12 }, { kind: 0, target: 12 }], holes: [], ice: [] },
+  { id: 8, name: '云朵天桥', subtitle: '慢慢融化更多冰块', moves: 30, size: 7, kinds: 5, goals: [{ kind: 'ice', target: 9 }, { kind: 3, target: 18 }], holes: [], ice: squareIce(9) },
+  { id: 9, name: '彩虹街区', subtitle: '完整大棋盘，试试五连彩虹', moves: 28, size: 8, kinds: 5, goals: [{ kind: 2, target: 15 }, { kind: 1, target: 15 }], holes: [], ice: [] },
+  { id: 10, name: '月亮花园', subtitle: '老头狗加入，六位伙伴终于到齐', moves: 30, size: 8, kinds: 6, goals: [{ kind: 5, target: 18 }, { kind: 0, target: 15 }], holes: [], ice: [] },
+  { id: 11, name: '银河换乘', subtitle: '双层冰块登场，用特效慢慢突破', moves: 32, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 12 }, { kind: 4, target: 24 }], holes: [], ice: squareIce(12), doubleIce: true },
+  { id: 12, name: '快乐终点站', subtitle: '带着六位伙伴一起到达终点', moves: 34, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 15 }, { kind: 5, target: 24 }], holes: [], ice: squareIce(15), doubleIce: true },
 ];
+export const LEVELS: Level[] = LEVEL_DEFINITIONS.map(level => ({
+  ...level,
+  holes: Array.from({ length: 64 }, (_, i) => i).filter(i => rowOf(i) >= level.size! || i % SIZE >= level.size!),
+}));
 
 /** Find horizontal/vertical runs and merge intersections before creating specials. */
 export function findMatches(board: (Tile | null)[], preferred: number[] = []): Match[] {
@@ -187,10 +194,10 @@ export class Game {
   progress(goal: Goal): number { return goal.kind === 'ice' ? this.iceCleared : goal.kind === 'score' ? this.score : this.collected[goal.kind]; }
   get won() { return this.level.goals.every(g => this.progress(g) >= g.target); }
   get stars() { return this.score >= 12000 ? 3 : this.score >= 6500 ? 2 : 1; }
-  serialize() { return { level: this.level.id, board: this.board, ice: this.ice, collected: this.collected, iceCleared: this.iceCleared, score: this.score, moves: this.moves }; }
+  serialize() { return { rules: 2, level: this.level.id, board: this.board, ice: this.ice, collected: this.collected, iceCleared: this.iceCleared, score: this.score, moves: this.moves }; }
   static restore(data: ReturnType<Game['serialize']>): Game | null {
     const level = LEVELS.find(l => l.id === data?.level);
-    if (!level || !Array.isArray(data.board) || data.board.length !== 64 || !Array.isArray(data.ice) || data.ice.length !== 64 || !Array.isArray(data.collected) || data.collected.length !== 6 || ![data.moves, data.score, data.iceCleared, ...data.collected].every(n => Number.isFinite(n) && n >= 0)) return null;
+    if (!level || data.rules !== 2 || !Array.isArray(data.board) || data.board.length !== 64 || !Array.isArray(data.ice) || data.ice.length !== 64 || !Array.isArray(data.collected) || data.collected.length !== 6 || ![data.moves, data.score, data.iceCleared, ...data.collected].every(n => Number.isFinite(n) && n >= 0)) return null;
     const ids = new Set<number>();
     for (let i = 0; i < 64; i++) {
       const t = data.board[i];

@@ -13,3 +13,5 @@
 .direction-badge.direction-column{width:15px;height:26px}
 .line-demo>.direction-icon{width:27px;height:14px;color:#6b8c50}
 @media(max-width:680px){.direction-badge{right:-2px;bottom:-1px;width:22px;height:13px;padding:0}.direction-badge.direction-column{width:13px;height:22px}}
+
+.station-detail{font-size:8px;color:#9aa78c;line-height:1}.friend-card.friend-locked img{opacity:.38;filter:grayscale(1)}.friend-card.friend-locked>span{color:#a88c4d}

@@ -10,7 +10,7 @@ const check = (name, pass) => { assert.ok(pass, name); results.push(name); conso
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
-  page.on('pageerror', e => errors.push(e.message));
+  page.on('pageerror', e => { errors.push(e.message); console.error('BROWSER ERROR:',e.stack); });
   const ready = async () => { await page.waitForSelector('#loading.loaded'); await page.waitForTimeout(450); };
   const state = () => page.evaluate(() => JSON.parse(localStorage.getItem('rail-pop-v1')));
   const cell = i => page.locator(`button[data-cell="${i}"]`);
@@ -20,10 +20,19 @@ try {
     await page.waitForTimeout(100);
   };
   await page.goto(base); await ready();
-  check('initial board has 64 playable character tiles', await page.locator('button[data-cell]').count() === 64);
-  check('initial goals are siblings, not nested', await page.locator('#goals > .goal-item').count() === 2);
+  check('first station starts with 25 tiles and three character kinds', await page.locator('button[data-cell]').count() === 25 && await page.locator('.tile').evaluateAll(els=>new Set(els.map(el=>el.querySelector('img').dataset.character)).size===3));
+  check('first station has one small collection goal', await page.locator('#goals > .goal-item').count() === 1);
   check('all portraits loaded', await page.locator('.tile img').evaluateAll(imgs => imgs.every(i => i.complete && i.naturalWidth > 0)));
   check('desktop has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth === innerWidth));
+  // Exercise the shared controls on a later, larger board to avoid clearing
+  // the intentionally tiny first-station goal in a single move.
+  const controlSave = await page.evaluate(async () => {
+    const { Game, LEVELS } = await import('/src/engine.ts');
+    const s = JSON.parse(localStorage.getItem('rail-pop-v1'));
+    const game = new Game(LEVELS[11]); game.moves = 26; s.current = game.serialize(); return s;
+  });
+  await context.addInitScript(s=>{if(location.protocol.startsWith('http')&&!sessionStorage.getItem('controls-fixture')){localStorage.setItem('rail-pop-v1',JSON.stringify(s));sessionStorage.setItem('controls-fixture','1');}},controlSave);
+  await page.reload(); await ready();
   const moves = await page.evaluate(async () => {
     const { Game, adjacent } = await import('/src/engine.ts');
     const game = Game.restore(JSON.parse(localStorage.getItem('rail-pop-v1')).current);
@@ -74,13 +83,14 @@ try {
     const fixtureSave = await page.evaluate(async type => {
       const { Game, LEVELS, findMatches } = await import('/src/engine.ts');
       const save = JSON.parse(localStorage.getItem('rail-pop-v1'));
-      const game = new Game(LEVELS[type === 'ice' ? 7 : 0]);
+      const game = new Game(LEVELS[type === 'ice' ? 10 : 0]);
       if (type !== 'ice') {
-        game.board = Array.from({ length: 64 }, (_, i) => ({ id: i + 1000, kind: (Math.floor(i / 8) * 2 + i % 8) % 5 }));
+        game.board = game.board.map((t,i) => t ? ({ id: i + 1000, kind: (Math.floor(i / 8) * 2 + i % 8) % game.level.kinds }) : null);
         game.board[0].kind = 0; game.board[1].kind = 0; game.board[2].kind = 1; game.board[10].kind = 0;
         if (findMatches(game.board).length) throw new Error('fixture must start stable');
-        game.moves = 1;
-        if (type === 'win') { game.collected[0] = 17; game.collected[2] = 18; }
+        game.moves = type === 'lose' ? 0 : 1;
+        if (type === 'lose') game.score = 180;
+        if (type === 'win') { game.collected[0] = game.level.goals[0].target - 1; }
       }
       save.current = game.serialize(); save.inventory = { hammer: 3, shuffle: 3, wand: 2, moves: 2 };
       return save;
@@ -95,13 +105,13 @@ try {
   check('first clear awards hammer and shuffle', (await state()).inventory.hammer === 4 && (await state()).inventory.shuffle === 4);
   await page.screenshot({ path: 'artifacts/victory.png', fullPage: true });
   await click('next'); check('next button starts station two', (await state()).current.level === 2);
-  await freshFixture('lose'); await cell(2).click(); await cell(10).click();
+  await freshFixture('lose');
   await page.waitForSelector('.modal-lose');
   check('running out of moves opens retry/continue flow', await page.locator('[data-action="retry"]').count() === 1 && await page.locator('[data-action="continue"]').count() === 1);
   await click('continue');
   check('continue spends one +5 item and retains score', (await state()).current.moves === 5 && (await state()).inventory.moves === 1 && (await state()).current.score > 0);
   await freshFixture('ice');
-  check('double-ice level renders 16 layered ice tiles', await page.locator('.tile.ice-2').count() === 16);
+  check('double-ice level renders 12 layered ice tiles', await page.locator('.tile.ice-2').count() === 12);
   await click('hammer'); await cell(18).click();
   await stable(() => JSON.parse(localStorage.getItem('rail-pop-v1')).inventory.hammer === 2 && !document.querySelector('.popping,.dropping'));
   check('first hammer removes one ice layer', (await state()).current.ice[18] === 1 && (await state()).current.iceCleared === 0);

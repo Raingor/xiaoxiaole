@@ -50,7 +50,7 @@ describe('交换与组合', () => {
     expect(wave.removed.sort((a, b) => a - b)).toEqual([0, 1, 10, 20]); expect(game.board[2]?.kind).toBe(0); expect(game.board[12]?.kind).toBe(0);
   });
   it('两个彩虹交换清空整张棋盘', () => {
-    const game = new Game(LEVELS[0], rng(3)); game.board[0]!.special = game.board[1]!.special = 'rainbow';
+    const game = new Game(LEVELS[11], rng(3)); game.board[0]!.special = game.board[1]!.special = 'rainbow';
     const result = game.swap(0, 1); expect(game.resolve(result.forced)!.removed).toHaveLength(64);
   });
   it('彩虹与直线交换，将所有同色转换成特效后触发', () => {
@@ -60,7 +60,7 @@ describe('交换与组合', () => {
     expect(wave.activated).toEqual(expect.arrayContaining([0, 10, 20])); expect(game.board[8]).toBeNull(); expect(game.board[16]).toBeNull(); expect(game.board[25]).not.toBeNull();
   });
   it.each([{ a: 'row', b: 'column', min: 15 }, { a: 'bomb', b: 'bomb', min: 25 }, { a: 'row', b: 'bomb', min: 39 }])('$a + $b 可以直接交换触发', ({ a, b, min }) => {
-    const game = new Game(LEVELS[0], rng(8)); game.board[27]!.special = a as Special; game.board[28]!.special = b as Special;
+    const game = new Game(LEVELS[11], rng(8)); game.board[27]!.special = a as Special; game.board[28]!.special = b as Special;
     const result = game.swap(27, 28); expect(result.valid).toBe(true); const wave = game.resolve(result.forced)!;
     expect(wave.removed.length).toBeGreaterThanOrEqual(min);
   });
@@ -73,19 +73,19 @@ describe('交换与组合', () => {
 
 describe('冰块、掉落、洗牌与存档', () => {
   it('双层冰块需两次命中，目标按完全融化的格数计数', () => {
-    const game = new Game(LEVELS[7], rng(4));
+    const game = new Game(LEVELS[10], rng(4));
     game.resolve(new Set([18])); expect(game.ice[18]).toBe(1); expect(game.iceCleared).toBe(0);
     game.collapse(); game.resolve(new Set([18])); expect(game.ice[18]).toBe(0); expect(game.iceCleared).toBe(1);
   });
   it('掉落绕过棋盘缺口且冰块固定在格子上', () => {
     const game = new Game(LEVELS[5], rng(6)); const old = game.board[8]!.id;
     game.resolve(new Set([48])); game.collapse();
-    expect(game.board[0]).toBeNull(); expect(game.board[63]).toBeNull(); expect(game.board[16]!.id).toBe(old); expect(game.ice[18]).toBe(1);
+    expect(game.board[7]).toBeNull(); expect(game.board[63]).toBeNull(); expect(game.board[16]!.id).toBe(old); expect(game.ice[18]).toBe(1);
   });
   it('洗牌保留棋子和特效、步数、分数、冰块，且不带初始匹配', () => {
     const game = new Game(LEVELS[2], rng(8)); game.board[18]!.special = 'bomb'; game.score = 200;
-    const ids = game.board.map(t => t!.id).sort(), ice = [...game.ice];
-    game.shuffle(); expect(game.board.map(t => t!.id).sort()).toEqual(ids);
+    const ids = game.board.filter(Boolean).map(t => t!.id).sort(), ice = [...game.ice];
+    game.shuffle(); expect(game.board.filter(Boolean).map(t => t!.id).sort()).toEqual(ids);
     expect(game.board.filter(t => t?.special === 'bomb')).toHaveLength(1); expect(game.score).toBe(200); expect(game.moves).toBe(26); expect(game.ice).toEqual(ice);
     expect(findMatches(game.board)).toEqual([]); expect(game.validMoves().length).toBeGreaterThan(0);
   });
@@ -114,5 +114,27 @@ describe('冰块、掉落、洗牌与存档', () => {
         expect(game.ice.every(x => x >= 0 && x <= 2)).toBe(true);
       }
     }
+  });
+});
+
+describe('循序渐进的关卡', () => {
+  it('目标每关递增、棋盘和角色数量不倒退，所有目标角色已在该关加入', () => {
+    expect(LEVELS[0].size).toBe(5); expect(LEVELS[0].kinds).toBe(3);
+    let total = 0, size = 0, kinds = 0;
+    for (const level of LEVELS) {
+      const next = level.goals.reduce((n,g) => n + g.target, 0);
+      expect(next).toBeGreaterThan(total); expect(level.size!).toBeGreaterThanOrEqual(size); expect(level.kinds).toBeGreaterThanOrEqual(kinds);
+      expect(level.goals.every(g => typeof g.kind !== 'number' || g.kind < level.kinds)).toBe(true);
+      expect(level.ice.every(i => !level.holes.includes(i))).toBe(true);
+      const game = new Game(level,rng(level.id));
+      expect(game.board.filter(Boolean)).toHaveLength(level.size! ** 2);
+      expect(game.board.every(t=> !t || t.kind < level.kinds)).toBe(true);
+      total = next; size = level.size!; kinds = level.kinds;
+    }
+    expect(LEVELS.filter(l => l.id === 4 || l.id === 7 || l.id === 10).map(l=>l.kinds)).toEqual([4,5,6]);
+  });
+  it('拒绝旧规则的中途棋盘，但新规则存档可以恢复', () => {
+    const game = new Game(LEVELS[0],rng(99)); const data = game.serialize();
+    expect(Game.restore({...data,rules:1})).toBeNull(); expect(Game.restore(data)?.board).toEqual(game.board);
   });
 });
