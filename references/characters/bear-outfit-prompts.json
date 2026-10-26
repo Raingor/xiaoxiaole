@@ -1,0 +1,29 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "public/characters-2d/classic.png",
+  "transparentBackground": true,
+  "assets": [
+    {
+      "id": "bear-raincoat",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D match-three game HEAD portrait sprite. Input image is the already approved Joke Bear head and is an IDENTITY AND LINE STYLE reference. Keep this exact white rounded pillow bear face, two round ears, tiny solid black dot eyes, black triangular nose connected to little W mouth, no blush and no eyebrows. Redraw clean flat 2D with bold near-black handdrawn outlines and solid flat colors, absolutely no 3D or plush texture. Single centered HEAD ONLY, fully visible, fill 88 percent of square canvas, true transparent background. Outfit clearly visible at 40px without covering the small face. No lettering, no scene, no frame, no cast shadow. Dress the bear head in a cheerful mustard yellow DUCK RAINCOAT HOOD wrapping around the outside of the face. Hood crown has a very small orange duck beak and two tiny black duck dots. Keep the original bear face recognizable and unobscured. Bright yellow rim with simple raincoat collar tabs at bottom, keep round bear ear bumps under the hood. This is a raincoat COSTUME of Joke Bear, not a duck character.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-f6e66446-c32e-44ff-8ab0-51762ddf892a.png",
+      "destination": "public/characters-2d/bear-raincoat.png"
+    },
+    {
+      "id": "bear-pajama",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D match-three game HEAD portrait sprite. Input image is the already approved Joke Bear head and is an IDENTITY AND LINE STYLE reference. Keep this exact white rounded pillow bear face, two round ears, tiny solid black dot eyes, black triangular nose connected to little W mouth, no blush and no eyebrows. Redraw clean flat 2D with bold near-black handdrawn outlines and solid flat colors, absolutely no 3D or plush texture. Single centered HEAD ONLY, fully visible, fill 88 percent of square canvas, true transparent background. Outfit clearly visible at 40px without covering the small face. No lettering, no scene, no frame, no cast shadow. Dress Joke Bear in a sage green SLEEPING NIGHTCAP: softly pointed floppy triangular cap with cream piping, one little butter-yellow star emblem, and a cream pompom hanging to the right. Keep both bear ears recognizable and entire white bear face visible. A tiny green pajama collar just under the chin may show. Calm sleepy costume, face remains same minimal small black dot eyes and W smile.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-4ec08586-dbfd-4e52-a469-8a7424d5e93a.png",
+      "destination": "public/characters-2d/bear-pajama.png"
+    },
+    {
+      "id": "bear-ninja",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D match-three game HEAD portrait sprite. Input image is the already approved Joke Bear head and is an IDENTITY AND LINE STYLE reference. Keep this exact white rounded pillow bear face, two round ears, tiny solid black dot eyes, black triangular nose connected to little W mouth, no blush and no eyebrows. Redraw clean flat 2D with bold near-black handdrawn outlines and solid flat colors, absolutely no 3D or plush texture. Single centered HEAD ONLY, fully visible, fill 88 percent of square canvas, true transparent background. Outfit clearly visible at 40px without covering the small face. No lettering, no scene, no frame, no cast shadow. Dress Joke Bear in a dark indigo NINJA HOOD and a small purple tied scarf just under the head. The hood wraps the outer face and bear ears, framing a broad uncovered WHITE FACE; no face mask, no eye mask, no weapons. Keep both eyes, nose and W mouth exactly visible like the reference. Two short fabric tie ends on one side, flat deep blue/lavender colors. The silhouette is still the same rounded bear head with ears.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-4a3b408b-ce66-4b4d-a04e-0f0257cbb551.png",
+      "destination": "public/characters-2d/bear-ninja.png"
+    }
+  ],
+  "bombImplementation": {
+    "status": "generation_connection_failed",
+    "implementation": "existing classic.png plus native CSS shell, ears and inline SVG fuse in src/main.ts bearBomb()"
+  }
+}

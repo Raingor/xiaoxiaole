@@ -1,8 +1,9 @@
+import { CHARACTER_COUNT } from './catalog';
 export const SIZE = 8;
 export type Special = 'row' | 'column' | 'bomb' | 'rainbow';
 export interface Tile { id: number; kind: number; special?: Special }
 export interface Goal { kind: number | 'ice' | 'score'; target: number }
-export interface Level { id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
+export interface Level { id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; roster?: number[]; bombs?: number[]; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
 export interface Match { cells: number[]; special?: Special; anchor: number }
 export interface Wave { removed: number[]; created: number[]; activated: number[]; iceBroken: number; points: number }
 let nextId = 1;
@@ -17,17 +18,25 @@ const squareIce = (count: number) => Array.from({ length: count }, (_, i) => (2 
 const LEVEL_DEFINITIONS: Level[] = [
   { id: 1, name: '初见站台', subtitle: '三位伙伴，先收集6个自嘲熊', moves: 26, size: 5, kinds: 3, goals: [{ kind: 0, target: 6 }], holes: [], ice: [] },
   { id: 2, name: '晴空小径', subtitle: '再熟悉一点，收集9个吉伊', moves: 25, size: 5, kinds: 3, goals: [{ kind: 1, target: 9 }], holes: [], ice: [] },
-  { id: 3, name: '伙伴小站', subtitle: '棋盘变大一点，试试两个小目标', moves: 26, size: 6, kinds: 3, goals: [{ kind: 0, target: 6 }, { kind: 2, target: 6 }], holes: [], ice: [] },
+  { id: 3, name: '伙伴小站', subtitle: '棋盘变大一点，试试两个小目标', moves: 26, size: 6, kinds: 3, goals: [{ kind: 0, target: 6 }, { kind: 2, target: 6 }], holes: [], ice: [], bombs: [18] },
   { id: 4, name: '樱花转角', subtitle: '乌萨奇加入快乐旅程', moves: 28, size: 6, kinds: 4, goals: [{ kind: 3, target: 9 }, { kind: 1, target: 6 }], holes: [], ice: [] },
   { id: 5, name: '甜甜广场', subtitle: '和四位伙伴一起制造连消', moves: 26, size: 6, kinds: 4, goals: [{ kind: 2, target: 9 }, { kind: 3, target: 9 }], holes: [], ice: [] },
-  { id: 6, name: '薄荷冰站', subtitle: '第一次遇见冰块，消除上面的伙伴试试', moves: 28, size: 7, kinds: 4, goals: [{ kind: 'ice', target: 6 }, { kind: 0, target: 15 }], holes: [], ice: squareIce(6) },
+  { id: 6, name: '薄荷冰站', subtitle: '第一次遇见冰块，消除上面的伙伴试试', moves: 28, size: 7, kinds: 4, goals: [{ kind: 'ice', target: 6 }, { kind: 0, target: 15 }], holes: [], ice: squareIce(6), bombs: [18] },
   { id: 7, name: '落日海岸', subtitle: '欢迎圆滚滚的鼹鼠饼', moves: 28, size: 7, kinds: 5, goals: [{ kind: 4, target: 12 }, { kind: 0, target: 12 }], holes: [], ice: [] },
-  { id: 8, name: '云朵天桥', subtitle: '慢慢融化更多冰块', moves: 30, size: 7, kinds: 5, goals: [{ kind: 'ice', target: 9 }, { kind: 3, target: 18 }], holes: [], ice: squareIce(9) },
+  { id: 8, name: '云朵天桥', subtitle: '慢慢融化更多冰块', moves: 30, size: 7, kinds: 5, goals: [{ kind: 'ice', target: 9 }, { kind: 3, target: 18 }], holes: [], ice: squareIce(9), bombs: [18, 36] },
   { id: 9, name: '彩虹街区', subtitle: '完整大棋盘，试试五连彩虹', moves: 28, size: 8, kinds: 5, goals: [{ kind: 2, target: 15 }, { kind: 1, target: 15 }], holes: [], ice: [] },
   { id: 10, name: '月亮花园', subtitle: '老头狗加入，六位伙伴终于到齐', moves: 30, size: 8, kinds: 6, goals: [{ kind: 5, target: 18 }, { kind: 0, target: 15 }], holes: [], ice: [] },
-  { id: 11, name: '银河换乘', subtitle: '双层冰块登场，用特效慢慢突破', moves: 32, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 12 }, { kind: 4, target: 24 }], holes: [], ice: squareIce(12), doubleIce: true },
-  { id: 12, name: '快乐终点站', subtitle: '带着六位伙伴一起到达终点', moves: 34, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 15 }, { kind: 5, target: 24 }], holes: [], ice: squareIce(15), doubleIce: true },
+  { id: 11, name: '银河换乘', subtitle: '双层冰块登场，用特效慢慢突破', moves: 32, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 12 }, { kind: 4, target: 24 }], holes: [], ice: squareIce(12), bombs: [18, 36], doubleIce: true },
+  { id: 12, name: '快乐终点站', subtitle: '带着六位伙伴一起到达终点', moves: 34, size: 8, kinds: 6, goals: [{ kind: 'ice', target: 15 }, { kind: 5, target: 24 }], holes: [], ice: squareIce(15), bombs: [18, 36], doubleIce: true },
+
+  { id: 13, name: '雨滴小站', subtitle: '雨衣熊加入：相同造型才能一起消除', moves: 34, size: 8, kinds: 6, roster: [0,2,3,4,5,6], bombs: [18], goals: [{ kind: 6, target: 21 }, { kind: 0, target: 21 }], holes: [], ice: [] },
+  { id: 14, name: '雨后彩虹', subtitle: '用熊熊炸弹帮伙伴们清路', moves: 35, size: 8, kinds: 6, roster: [0,2,3,4,5,6], bombs: [18,36], goals: [{ kind: 'ice', target: 15 }, { kind: 6, target: 30 }], holes: [], ice: squareIce(15) },
+  { id: 15, name: '晚安月台', subtitle: '睡衣熊加入，慢慢收集新造型', moves: 36, size: 8, kinds: 6, roster: [0,2,3,5,6,7], bombs: [18], goals: [{ kind: 7, target: 24 }, { kind: 6, target: 24 }], holes: [], ice: [] },
+  { id: 16, name: '星星枕头', subtitle: '睡帽和雨衣，记得看清造型再交换', moves: 36, size: 8, kinds: 6, roster: [0,2,3,5,6,7], bombs: [18,36], goals: [{ kind: 'ice', target: 15 }, { kind: 7, target: 36 }], holes: [], ice: squareIce(15), doubleIce: true },
+  { id: 17, name: '夜行街角', subtitle: '忍者熊加入，三款造型一起出发', moves: 38, size: 8, kinds: 6, roster: [0,3,5,6,7,8], bombs: [18], goals: [{ kind: 8, target: 27 }, { kind: 7, target: 27 }], holes: [], ice: [] },
+  { id: 18, name: '造型大派对', subtitle: '用特效组合庆祝新的旅程', moves: 40, size: 8, kinds: 6, roster: [0,3,5,6,7,8], bombs: [18,36], goals: [{ kind: 6, target: 18 }, { kind: 7, target: 18 }, { kind: 8, target: 21 }], holes: [], ice: [] },
 ];
+export const levelRoster = (level: Level): number[] => level.roster ?? Array.from({ length: level.kinds }, (_, i) => i);
 export const LEVELS: Level[] = LEVEL_DEFINITIONS.map(level => ({
   ...level,
   holes: Array.from({ length: 64 }, (_, i) => i).filter(i => rowOf(i) >= level.size! || i % SIZE >= level.size!),
@@ -71,7 +80,7 @@ export function findMatches(board: (Tile | null)[], preferred: number[] = []): M
 export class Game {
   board: (Tile | null)[] = [];
   ice: number[] = Array(64).fill(0);
-  collected: number[] = Array(6).fill(0);
+  collected: number[] = Array(CHARACTER_COUNT).fill(0);
   iceCleared = 0;
   score = 0;
   moves: number;
@@ -81,17 +90,19 @@ export class Game {
     for (const i of level.ice) this.ice[i] = level.doubleIce ? 2 : 1;
     this.generate();
   }
+  private randomKind() { const roster = levelRoster(this.level); return roster[Math.floor(this.random() * roster.length)]; }
   generate() {
     for (let attempt = 0; attempt < 200; attempt++) {
       this.board = Array(64).fill(null);
       for (let i = 0; i < 64; i++) {
         if (this.level.holes.includes(i)) continue;
         let kind: number;
-        do { kind = Math.floor(this.random() * this.level.kinds); }
+        do { kind = this.randomKind(); }
         while ((i % 8 >= 2 && this.board[i - 1]?.kind === kind && this.board[i - 2]?.kind === kind) || (i >= 16 && this.board[i - 8]?.kind === kind && this.board[i - 16]?.kind === kind));
         this.board[i] = tile(kind);
       }
-      if (this.validMoves().length) return;
+      for (const i of this.level.bombs ?? []) { if (this.board[i]) this.board[i] = { ...this.board[i]!, kind: 0, special: 'bomb' }; }
+      if (!findMatches(this.board).length && this.validMoves().length) return;
     }
     throw new Error('无法生成可用棋盘');
   }
@@ -175,7 +186,7 @@ export class Game {
       const existing = cells.filter(i => this.board[i]).map(i => ({ t: this.board[i]!, from: i }));
       for (let n = cells.length - 1; n >= 0; n--) {
         const dest = cells[n], old = existing.pop();
-        this.board[dest] = old?.t ?? tile(Math.floor(this.random() * this.level.kinds));
+        this.board[dest] = old?.t ?? tile(this.randomKind());
         drops.set(dest, old ? (dest - old.from) / 8 : (n + 1));
       }
     }
@@ -197,16 +208,16 @@ export class Game {
   serialize() { return { rules: 2, level: this.level.id, board: this.board, ice: this.ice, collected: this.collected, iceCleared: this.iceCleared, score: this.score, moves: this.moves }; }
   static restore(data: ReturnType<Game['serialize']>): Game | null {
     const level = LEVELS.find(l => l.id === data?.level);
-    if (!level || data.rules !== 2 || !Array.isArray(data.board) || data.board.length !== 64 || !Array.isArray(data.ice) || data.ice.length !== 64 || !Array.isArray(data.collected) || data.collected.length !== 6 || ![data.moves, data.score, data.iceCleared, ...data.collected].every(n => Number.isFinite(n) && n >= 0)) return null;
+    if (!level || data.rules !== 2 || !Array.isArray(data.board) || data.board.length !== 64 || !Array.isArray(data.ice) || data.ice.length !== 64 || !Array.isArray(data.collected) || (data.collected.length < 6 || data.collected.length > CHARACTER_COUNT) || ![data.moves, data.score, data.iceCleared, ...data.collected].every(n => Number.isFinite(n) && n >= 0)) return null;
     const ids = new Set<number>();
     for (let i = 0; i < 64; i++) {
       const t = data.board[i];
-      if (level.holes.includes(i) ? t !== null : !t || !Number.isInteger(t.kind) || t.kind < 0 || t.kind >= level.kinds || !Number.isInteger(t.id) || t.id < 1 || ids.has(t.id) || (t.special !== undefined && !['row', 'column', 'bomb', 'rainbow'].includes(t.special))) return null;
+      if (level.holes.includes(i) ? t !== null : !t || !Number.isInteger(t.kind) || t.kind < 0 || !levelRoster(level).includes(t.kind) || !Number.isInteger(t.id) || t.id < 1 || ids.has(t.id) || (t.special !== undefined && !['row', 'column', 'bomb', 'rainbow'].includes(t.special))) return null;
       if (t) ids.add(t.id);
       if (![0, 1, 2].includes(data.ice[i])) return null;
     }
     const game = new Game(level);
-    game.board = data.board; game.ice = data.ice; game.collected = data.collected;
+    game.board = data.board; game.ice = data.ice; game.collected = Array.from({ length: CHARACTER_COUNT }, (_, i) => data.collected[i] ?? 0);
     game.iceCleared = data.iceCleared; game.score = data.score; game.moves = data.moves;
     nextId = Math.max(nextId, ...data.board.map(t => (t?.id ?? 0) + 1));
     if (findMatches(game.board).length) return null;

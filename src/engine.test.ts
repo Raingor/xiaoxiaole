@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Game, LEVELS, findMatches, adjacent, type Tile, type Special } from './engine';
+import { Game, LEVELS, findMatches, adjacent, levelRoster, type Tile, type Special } from './engine';
 
 const rng = (seed: number) => () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296; };
 const empty = () => Array<Tile | null>(64).fill(null);
@@ -101,7 +101,7 @@ describe('冰块、掉落、洗牌与存档', () => {
     const game = new Game(LEVELS[0], rng(4)); game.moves = 0; game.collected[0] = 18; game.collected[2] = 18;
     expect(game.won).toBe(true);
   });
-  it('12 关各模拟 100 步，始终能稳定掉落并满足棋盘不变量', () => {
+  it('所有关卡各模拟 100 步，始终能稳定掉落并满足棋盘不变量', () => {
     for (const level of LEVELS) {
       const random = rng(level.id * 1234), game = new Game(level, random); game.moves = 100;
       for (let turn = 0; turn < 100; turn++) {
@@ -124,11 +124,11 @@ describe('循序渐进的关卡', () => {
     for (const level of LEVELS) {
       const next = level.goals.reduce((n,g) => n + g.target, 0);
       expect(next).toBeGreaterThan(total); expect(level.size!).toBeGreaterThanOrEqual(size); expect(level.kinds).toBeGreaterThanOrEqual(kinds);
-      expect(level.goals.every(g => typeof g.kind !== 'number' || g.kind < level.kinds)).toBe(true);
+      expect(level.goals.every(g => typeof g.kind !== 'number' || levelRoster(level).includes(g.kind))).toBe(true);
       expect(level.ice.every(i => !level.holes.includes(i))).toBe(true);
       const game = new Game(level,rng(level.id));
       expect(game.board.filter(Boolean)).toHaveLength(level.size! ** 2);
-      expect(game.board.every(t=> !t || t.kind < level.kinds)).toBe(true);
+      expect(game.board.every(t=> !t || levelRoster(level).includes(t.kind))).toBe(true);
       total = next; size = level.size!; kinds = level.kinds;
     }
     expect(LEVELS.filter(l => l.id === 4 || l.id === 7 || l.id === 10).map(l=>l.kinds)).toEqual([4,5,6]);
@@ -136,5 +136,43 @@ describe('循序渐进的关卡', () => {
   it('拒绝旧规则的中途棋盘，但新规则存档可以恢复', () => {
     const game = new Game(LEVELS[0],rng(99)); const data = game.serialize();
     expect(Game.restore({...data,rules:1})).toBeNull(); expect(Game.restore(data)?.board).toEqual(game.board);
+  });
+});
+
+describe('熊熊炸弹与造型身份', () => {
+  it('首两关没有预置炸弹，第三关才引入，所有预置位置有效且不造成开局连消', () => {
+    expect(LEVELS[0].bombs ?? []).toHaveLength(0); expect(LEVELS[1].bombs ?? []).toHaveLength(0);
+    expect(LEVELS[2].bombs).toHaveLength(1);
+    for (const level of LEVELS) {
+      const game = new Game(level,rng(level.id+300));
+      for(const i of level.bombs ?? []) { expect(game.board[i]?.special).toBe('bomb'); expect(game.board[i]?.kind).toBe(0); }
+      expect(findMatches(game.board)).toEqual([]);
+    }
+  });
+  it('熊形炸弹爆炸清3×3并触发范围内的第二颗炸弹', () => {
+    const game = new Game(LEVELS[11],rng(4));game.board.forEach(t=>{if(t)t.special=undefined;});
+    game.board[27]!.special='bomb';game.board[28]!.special='bomb';
+    const wave=game.resolve(new Set([27]))!;
+    expect(wave.activated).toEqual(expect.arrayContaining([27,28]));
+    expect(wave.removed).toHaveLength(12);expect(new Set(wave.removed).size).toBe(12);
+  });
+  it('普通熊和两种造型熊不能混消，相同造型可以消除', () => {
+    const board=empty();place(board,[0],0);place(board,[1],6);place(board,[2],7);
+    expect(findMatches(board)).toHaveLength(0);
+    place(board,[0,1,2],6);expect(findMatches(board)).toHaveLength(1);
+  });
+  it('新增造型按13/15/17关加入，补充、洗牌与恢复仅使用当关阵容', () => {
+    for (const [id,kind] of [[13,6],[15,7],[17,8]]) {
+      const game=new Game(LEVELS[id-1],rng(id*3));const roster=levelRoster(game.level);
+      expect(roster).toContain(kind);expect(roster).toHaveLength(6);
+      expect(LEVELS.slice(0,id-1).every(l=>!levelRoster(l).includes(kind))).toBe(true);
+      game.resolve(new Set([0,1,2]));game.collapse();settle(game);game.shuffle();
+      expect(game.board.every(t=>!t||roster.includes(t.kind))).toBe(true);
+      expect(Game.restore(game.serialize())?.serialize()).toEqual(game.serialize());
+    }
+  });
+  it('六角色旧档会补齐新造型的收集计数，不丢原进度', () => {
+    const game=new Game(LEVELS[0],rng(1));const old=game.serialize();old.collected=Array(6).fill(1);
+    const restored=Game.restore(old)!;expect(restored.collected).toHaveLength(9);expect(restored.collected.slice(0,6)).toEqual(old.collected);expect(restored.collected.slice(6)).toEqual([0,0,0]);
   });
 });

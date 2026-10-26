@@ -1,0 +1,7 @@
+{
+  "tool": "built-in image_gen",
+  "status": "failed: connection error",
+  "reference": "public/characters-2d/classic.png",
+  "prompt": "Use case: illustration-story. Asset type: transparent 2D friendly teddy-bear-shaped BOMB power-up sprite for a match-three game. Attached white Joke Bear drawing is identity/outline reference. Draw one rounded BEAR HEAD SHAPED cartoon bomb with two small bear ears; warm charcoal casing, a large flat ivory-white inner face panel carrying the same minimal little dot eyes, black triangular nose and W-shaped mouth of Joke Bear. A short curled fuse emerges just above the right ear, capped by a tiny orange/red star spark. The bear silhouette and fuse must be distinct at 40px, cute helpful power-up, not scary. Flat solid colors, bold warm black outline, clean 2D manga sticker style matching reference, no 3D lighting, no metallic highlights, no gradients, no shadows, no words, no scene. Centered complete head with fuse visible, fill 88% of square canvas. Genuine transparent background.",
+  "finalImplementation": "src/main.ts bearBomb(): existing classic.png plus native CSS casing and SVG fuse"
+}

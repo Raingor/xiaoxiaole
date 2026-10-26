@@ -15,7 +15,7 @@ export async function makePortraits(): Promise<Record<string, string>> {
   const key = new THREE.DirectionalLight(0xfff4df, 3.2); key.position.set(-3, 5, 6); scene.add(key);
   const fill = new THREE.DirectionalLight(0xe1f4ff, 1.3); fill.position.set(4, 2, 3); scene.add(fill);
   for (const friend of FRIENDS) {
-    const bear = new JokeBear(SKINS.find(s => s.id === friend.id)!);
+    const bear = new JokeBear(SKINS.find(s => s.id === ('skinId' in friend ? friend.skinId : friend.id))!);
     bear.update(0, { speedNorm: 0, lateralVel: 0, rollProgress: 0 });
     bear.root.rotation.y = -0.08;
     scene.add(bear.root); scene.updateMatrixWorld(true);

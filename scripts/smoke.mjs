@@ -67,11 +67,11 @@ try {
   await stable(() => JSON.parse(localStorage.getItem('rail-pop-v1')).inventory.shuffle === 2);
   check('shuffle preserves score and moves', (await state()).current.score === beforeShuffle.score && (await state()).current.moves === beforeShuffle.moves);
   await click('map');
-  check('map has 12 stations and locks future levels', await page.locator('.station').count() === 12 && await page.locator('.station[disabled]').count() === 11);
+  check('map has 18 stations and locks future levels', await page.locator('.station').count() === 18 && await page.locator('.station[disabled]').count() === 17);
   await mkdir('artifacts', { recursive: true });
   await page.screenshot({ path: 'artifacts/journey-map.png', fullPage: true });
   await page.keyboard.press('Escape'); await click('friends');
-  check('collection displays all six original characters', await page.locator('.friend-card').count() === 6);
+  check('collection displays six original characters and three outfits', await page.locator('.friend-card').count() === 9);
   await click('close'); await click('help');
   check('help explains special combinations and keyboard controls', (await page.locator('.help-list').textContent()).includes('双彩虹') && (await page.locator('.help-list').textContent()).includes('Shift'));
   await page.keyboard.press('Escape');
@@ -84,6 +84,7 @@ try {
       const { Game, LEVELS, findMatches } = await import('/src/engine.ts');
       const save = JSON.parse(localStorage.getItem('rail-pop-v1'));
       const game = new Game(LEVELS[type === 'ice' ? 10 : 0]);
+      if (type === 'ice') game.board.forEach(t => { if (t) t.special = undefined; });
       if (type !== 'ice') {
         game.board = game.board.map((t,i) => t ? ({ id: i + 1000, kind: (Math.floor(i / 8) * 2 + i % 8) % game.level.kinds }) : null);
         game.board[0].kind = 0; game.board[1].kind = 0; game.board[2].kind = 1; game.board[10].kind = 0;
