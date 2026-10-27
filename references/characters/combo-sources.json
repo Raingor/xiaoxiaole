@@ -1,0 +1,20 @@
+[
+  {
+    "name": "clap",
+    "page": "https://tenor.com/view/plinker98-jokebear-clapping-jokeclap-gif-7930087846966567832",
+    "asset": "https://media.tenor.com/bg1U4aQVo5gAAAAj/plinker98-jokebear.gif",
+    "file": "public/characters-2d/joke-bear-clap.gif",
+    "date": "2026-10-27",
+    "bytes": 46212,
+    "note": "Existing online GIF, downloaded unchanged."
+  },
+  {
+    "name": "rare",
+    "page": "https://tenor.com/view/신나는농담곰-정신사나운농담곰-joke-bear-cute-animated-bear-gif-17774338",
+    "asset": "https://media.tenor.com/PK95lqgvj4kAAAAj/%EC%8B%A0%EB%82%98%EB%8A%94%EB%86%8D%EB%8B%B4%EA%B3%B0-%EC%A0%95%EC%8B%A0%EC%82%AC%EB%82%98%EC%9A%B4%EB%86%8D%EB%8B%B4%EA%B3%B0.gif",
+    "file": "public/characters-2d/joke-bear-rare.gif",
+    "date": "2026-10-27",
+    "bytes": 41948,
+    "note": "Existing online GIF, downloaded unchanged."
+  }
+]

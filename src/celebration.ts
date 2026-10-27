@@ -5,8 +5,9 @@ const cheerPortrait = `${import.meta.env.BASE_URL}characters-2d/joke-bear-victor
 
 export function preloadCelebration() {
   // Warm the cache without making this decorative image block the game.
-  const image = new Image();
-  image.src = cheerPortrait;
+  for (const src of [cheerPortrait, `${import.meta.env.BASE_URL}characters-2d/joke-bear-clap.gif`, `${import.meta.env.BASE_URL}characters-2d/joke-bear-rare.gif`]) {
+    const image = new Image(); image.src = src;
+  }
 }
 
 export function victoryCelebration() {

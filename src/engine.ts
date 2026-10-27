@@ -2,10 +2,11 @@ import { CHARACTER_COUNT } from './catalog';
 export const SIZE = 8;
 export type Special = 'row' | 'column' | 'bomb' | 'rainbow';
 export interface Tile { id: number; kind: number; special?: Special }
-export interface Goal { kind: number | 'ice' | 'score'; target: number }
-export interface Level { id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; roster?: number[]; bombs?: number[]; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
+export interface Goal { kind: number | 'ice' | 'score' | 'rescue' | 'souvenir' | 'combo' | 'bombs'; target: number }
+export type Theme = 'sunny' | 'picnic' | 'rain' | 'night';
+export interface Level { theme?: Theme; rescue?: { cell: number; kind: number }[]; souvenirs?: number[]; train?: boolean; id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; roster?: number[]; bombs?: number[]; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
 export interface Match { cells: number[]; special?: Special; anchor: number }
-export interface Wave { removed: number[]; created: number[]; activated: number[]; iceBroken: number; points: number }
+export interface Wave { removed: number[]; created: number[]; activated: number[]; iceBroken: number; points: number; rescued: number[]; souvenirs: number[] }
 let nextId = 1;
 const tile = (kind: number): Tile => ({ id: nextId++, kind });
 export const adjacent = (a: number, b: number) => Math.abs(a % SIZE - b % SIZE) + Math.abs(Math.floor(a / SIZE) - Math.floor(b / SIZE)) === 1;
@@ -39,6 +40,11 @@ const LEVEL_DEFINITIONS: Level[] = [
 export const levelRoster = (level: Level): number[] => level.roster ?? Array.from({ length: level.kinds }, (_, i) => i);
 export const LEVELS: Level[] = LEVEL_DEFINITIONS.map(level => ({
   ...level,
+  theme: level.id >= 15 ? 'night' : level.id >= 13 ? 'rain' : level.id >= 7 ? 'picnic' : 'sunny',
+  train: level.id >= 8,
+  rescue: ({ 5: [{ cell: 18, kind: 1 }, { cell: 27, kind: 2 }], 8: [{ cell: 19, kind: 0 }, { cell: 36, kind: 3 }], 11: [{ cell: 20, kind: 4 }, { cell: 44, kind: 5 }], 18: [{ cell: 18, kind: 6 }, { cell: 36, kind: 7 }, { cell: 45, kind: 8 }] } as Record<number, {cell: number; kind: number}[]>)[level.id] ?? [],
+  souvenirs: [7, 9, 12, 15, 16, 17, 18].includes(level.id) ? [17, 27, 36] : [],
+  goals: [5, 8, 11, 18].includes(level.id) ? [...level.goals, { kind: 'rescue', target: level.id === 18 ? 3 : 2 }] : [7, 9, 12, 15, 16, 17].includes(level.id) ? [...level.goals.map((g,i) => i === level.goals.length - 1 ? {...g, target:g.target-3} : g), {kind:'souvenir',target:3}] : level.goals,
   holes: Array.from({ length: 64 }, (_, i) => i).filter(i => rowOf(i) >= level.size! || i % SIZE >= level.size!),
 }));
 
@@ -85,7 +91,22 @@ export class Game {
   score = 0;
   moves: number;
   combo = 0;
-  constructor(public level: Level, private random = Math.random) {
+  maxCombo = 0;
+  bombsUsed = 0;
+  cages: number[] = Array(64).fill(0);
+  rescued = 0;
+  souvenirCells: number[] = [];
+  souvenirsCollected = 0;
+  trainEnergy = 0;
+  trainRides = 0;
+  rngState = 0;
+  constructor(public level: Level, private random = Math.random, public initialSeed?: number) {
+    if (initialSeed !== undefined) {
+      this.rngState = initialSeed >>> 0;
+      this.random = () => { this.rngState = (Math.imul(this.rngState, 1664525) + 1013904223) >>> 0; return this.rngState / 4294967296; };
+    }
+    for (const box of level.rescue ?? []) this.cages[box.cell] = 2;
+    this.souvenirCells = [...(level.souvenirs ?? [])];
     this.moves = level.moves;
     for (const i of level.ice) this.ice[i] = level.doubleIce ? 2 : 1;
     this.generate();
@@ -164,6 +185,7 @@ export class Game {
         : this.board.flatMap((p, k) => p?.kind === t.kind ? [k] : []);
       for (const k of extra) if (!hits.has(k)) { hits.add(k); queue.push(k); }
     }
+    this.bombsUsed += activated.filter(i => this.board[i]?.special === 'bomb').length;
     let iceBroken = 0;
     const removed: number[] = [];
     for (const i of hits) {
@@ -174,10 +196,22 @@ export class Game {
       this.collected[t.kind]++; this.board[i] = null; removed.push(i);
     }
     for (const m of creates) this.board[m.anchor]!.special = m.special;
+    const rescued: number[] = [];
+    for (const box of this.level.rescue ?? []) {
+      if (this.cages[box.cell] && removed.some(i => i === box.cell || adjacent(i, box.cell))) {
+        this.cages[box.cell]--;
+        if (!this.cages[box.cell]) { this.rescued++; rescued.push(box.kind); }
+      }
+    }
+    const souvenirs = this.souvenirCells.filter(i => removed.includes(i));
+    this.souvenirCells = this.souvenirCells.filter(i => !removed.includes(i));
+    this.souvenirsCollected += souvenirs.length;
     this.combo++;
+    this.maxCombo = Math.max(this.maxCombo, this.combo);
+    if (this.level.train) this.trainEnergy = Math.min(72, this.trainEnergy + removed.length);
     const points = removed.length * 60 * this.combo + activated.length * 120 + creates.length * 100 + iceBroken * 80;
     this.score += points;
-    return { removed, created: creates.map(m => m.anchor), activated, iceBroken, points };
+    return { removed, created: creates.map(m => m.anchor), activated, iceBroken, points, rescued, souvenirs };
   }
   collapse(): Map<number, number> {
     const drops = new Map<number, number>();
@@ -202,12 +236,26 @@ export class Game {
     }
     this.generate();
   }
-  progress(goal: Goal): number { return goal.kind === 'ice' ? this.iceCleared : goal.kind === 'score' ? this.score : this.collected[goal.kind]; }
+  departTrain(): { type: 'gift' | 'row'; cells: number[] } | null {
+    if (!this.level.train || this.trainEnergy < 36) return null;
+    this.trainEnergy -= 36; this.trainRides++;
+    const candidates = this.board.flatMap((t,i) => t && !t.special ? [i] : []);
+    if (this.trainRides % 2 === 1 && candidates.length) {
+      const cell = candidates[Math.floor(this.random() * candidates.length)];
+      this.board[cell]!.special = 'bomb';
+      return { type:'gift', cells:[cell] };
+    }
+    const row = Math.floor(this.random() * (this.level.size ?? 8));
+    return {type:'row',cells:this.board.flatMap((t,i) => t && rowOf(i) === row ? [i] : [])};
+  }
+  progress(goal: Goal): number {
+    return typeof goal.kind === 'number' ? this.collected[goal.kind] : ({ice:this.iceCleared,score:this.score,rescue:this.rescued,souvenir:this.souvenirsCollected,combo:this.maxCombo,bombs:this.bombsUsed})[goal.kind];
+  }
   get won() { return this.level.goals.every(g => this.progress(g) >= g.target); }
   get stars() { return this.score >= 12000 ? 3 : this.score >= 6500 ? 2 : 1; }
-  serialize() { return { rules: 2, level: this.level.id, board: this.board, ice: this.ice, collected: this.collected, iceCleared: this.iceCleared, score: this.score, moves: this.moves }; }
-  static restore(data: ReturnType<Game['serialize']>): Game | null {
-    const level = LEVELS.find(l => l.id === data?.level);
+  serialize() { return { rules: 2, level: this.level.id, board: this.board, ice: this.ice, collected: this.collected, iceCleared: this.iceCleared, score: this.score, moves: this.moves, initialSeed:this.initialSeed, rngState:this.rngState, cages:this.cages, rescued:this.rescued, souvenirCells:this.souvenirCells, souvenirsCollected:this.souvenirsCollected, trainEnergy:this.trainEnergy, trainRides:this.trainRides, maxCombo:this.maxCombo, bombsUsed:this.bombsUsed }; }
+  static restore(data: ReturnType<Game['serialize']>, override?: Level): Game | null {
+    const level = override?.id === data?.level ? override : LEVELS.find(l => l.id === data?.level);
     if (!level || data.rules !== 2 || !Array.isArray(data.board) || data.board.length !== 64 || !Array.isArray(data.ice) || data.ice.length !== 64 || !Array.isArray(data.collected) || (data.collected.length < 6 || data.collected.length > CHARACTER_COUNT) || ![data.moves, data.score, data.iceCleared, ...data.collected].every(n => Number.isFinite(n) && n >= 0)) return null;
     const ids = new Set<number>();
     for (let i = 0; i < 64; i++) {
@@ -216,8 +264,17 @@ export class Game {
       if (t) ids.add(t.id);
       if (![0, 1, 2].includes(data.ice[i])) return null;
     }
-    const game = new Game(level);
-    game.board = data.board; game.ice = data.ice; game.collected = Array.from({ length: CHARACTER_COUNT }, (_, i) => data.collected[i] ?? 0);
+    const extraCounts = ['rescued','souvenirsCollected','trainEnergy','trainRides','maxCombo','bombsUsed','rngState','initialSeed'] as const;
+    if (extraCounts.some(k => data[k] !== undefined && (!Number.isInteger(data[k]) || data[k]! < 0 || data[k]! > 4294967295))) return null;
+    if (data.cages !== undefined && (!Array.isArray(data.cages) || data.cages.length !== 64 || data.cages.some((n,i) => ![0,1,2].includes(n) || (n > 0 && !(level.rescue ?? []).some(b => b.cell === i))))) return null;
+    if (data.souvenirCells !== undefined && (!Array.isArray(data.souvenirCells) || new Set(data.souvenirCells).size !== data.souvenirCells.length || data.souvenirCells.some(i => !(level.souvenirs ?? []).includes(i)))) return null;
+    const game = new Game(level, undefined, data.initialSeed);
+    game.rngState = data.rngState ?? game.rngState;
+    game.cages = data.cages ? [...data.cages] : game.cages; game.rescued = data.rescued ?? 0;
+    game.souvenirCells = data.souvenirCells ? [...data.souvenirCells] : game.souvenirCells; game.souvenirsCollected = data.souvenirsCollected ?? 0;
+    game.trainEnergy = Math.min(72,data.trainEnergy ?? 0); game.trainRides = data.trainRides ?? 0;
+    game.maxCombo = data.maxCombo ?? 0; game.bombsUsed = data.bombsUsed ?? 0;
+    game.board = data.board.map(t=>t ? {...t} : null); game.ice = [...data.ice]; game.collected = Array.from({ length: CHARACTER_COUNT }, (_, i) => data.collected[i] ?? 0);
     game.iceCleared = data.iceCleared; game.score = data.score; game.moves = data.moves;
     nextId = Math.max(nextId, ...data.board.map(t => (t?.id ?? 0) + 1));
     if (findMatches(game.board).length) return null;
