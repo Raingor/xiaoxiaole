@@ -77,8 +77,7 @@ app.innerHTML = `
   <div id="toast" class="toast" role="status"></div><div id="modal-root"></div>`;
 
 function persist() {
-  if (!busy) save.current = terminal ? undefined : game.serialize();
-  save.mode = !terminal && mode ? mode : undefined;
+  if (!busy) { save.current = terminal ? undefined : game.serialize(); save.mode = !terminal && mode ? mode : undefined; }
   try { localStorage.setItem(KEY, JSON.stringify(save)); } catch { toast('浏览器暂时无法保存进度，本次游戏可继续'); }
 }
 function photo(kind: number, cls = '') { return `<img class="${cls}" data-character="${FRIENDS[kind].id}" src="${portraits[FRIENDS[kind].id] ?? ''}" alt="${FRIENDS[kind].name}" draggable="false"/>`; }
@@ -315,6 +314,7 @@ function activateGame() {
 function beginChallenge(spec: Challenge) {
   if (busy || !validChallenge(spec)) return;
   if (!mode) save.campaign=terminal?undefined:game.serialize();
+  const currentUrl = new URL(location.href); currentUrl.searchParams.delete('challenge'); history.replaceState(null,'',currentUrl);
   mode=structuredClone(spec);game=new Game(challengeLevel(mode),undefined,mode.seed);activateGame();
   toast(mode.type==='daily'?'每日挑战开始！主线进度已保留':'同棋盘挑战开始！主线进度已保留');
 }
