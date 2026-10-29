@@ -1,10 +1,11 @@
 import { CHARACTER_COUNT } from './catalog';
+import { EXPANSION_LEVELS } from './expansion-levels';
 export const SIZE = 8;
 export type Special = 'row' | 'column' | 'bomb' | 'rainbow';
 export interface Tile { id: number; kind: number; special?: Special }
 export interface Goal { kind: number | 'ice' | 'score' | 'rescue' | 'souvenir' | 'combo' | 'bombs'; target: number }
 export type Theme = 'sunny' | 'picnic' | 'rain' | 'night';
-export interface Level { theme?: Theme; rescue?: { cell: number; kind: number }[]; souvenirs?: number[]; train?: boolean; id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; roster?: number[]; bombs?: number[]; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
+export interface Level { stickerKind?: number; story?: string; theme?: Theme; rescue?: { cell: number; kind: number }[]; souvenirs?: number[]; train?: boolean; id: number; name: string; subtitle: string; moves: number; kinds: number; size?: number; roster?: number[]; bombs?: number[]; goals: Goal[]; holes: number[]; ice: number[]; doubleIce?: boolean }
 export interface Match { cells: number[]; special?: Special; anchor: number }
 export interface Wave { removed: number[]; created: number[]; activated: number[]; iceBroken: number; points: number; rescued: number[]; souvenirs: number[] }
 let nextId = 1;
@@ -36,11 +37,12 @@ const LEVEL_DEFINITIONS: Level[] = [
   { id: 16, name: '星星枕头', subtitle: '睡帽和雨衣，记得看清造型再交换', moves: 36, size: 8, kinds: 6, roster: [0,2,3,5,6,7], bombs: [18,36], goals: [{ kind: 'ice', target: 15 }, { kind: 7, target: 36 }], holes: [], ice: squareIce(15), doubleIce: true },
   { id: 17, name: '夜行街角', subtitle: '忍者熊加入，三款造型一起出发', moves: 38, size: 8, kinds: 6, roster: [0,3,5,6,7,8], bombs: [18], goals: [{ kind: 8, target: 27 }, { kind: 7, target: 27 }], holes: [], ice: [] },
   { id: 18, name: '造型大派对', subtitle: '用特效组合庆祝新的旅程', moves: 40, size: 8, kinds: 6, roster: [0,3,5,6,7,8], bombs: [18,36], goals: [{ kind: 6, target: 18 }, { kind: 7, target: 18 }, { kind: 8, target: 21 }], holes: [], ice: [] },
+  ...EXPANSION_LEVELS,
 ];
 export const levelRoster = (level: Level): number[] => level.roster ?? Array.from({ length: level.kinds }, (_, i) => i);
 export const LEVELS: Level[] = LEVEL_DEFINITIONS.map(level => ({
   ...level,
-  theme: level.id >= 15 ? 'night' : level.id >= 13 ? 'rain' : level.id >= 7 ? 'picnic' : 'sunny',
+  theme: level.theme ?? (level.id >= 15 ? 'night' : level.id >= 13 ? 'rain' : level.id >= 7 ? 'picnic' : 'sunny'),
   train: level.id >= 8,
   rescue: ({ 5: [{ cell: 18, kind: 1 }, { cell: 27, kind: 2 }], 8: [{ cell: 19, kind: 0 }, { cell: 36, kind: 3 }], 11: [{ cell: 20, kind: 4 }, { cell: 44, kind: 5 }], 18: [{ cell: 18, kind: 6 }, { cell: 36, kind: 7 }, { cell: 45, kind: 8 }] } as Record<number, {cell: number; kind: number}[]>)[level.id] ?? [],
   souvenirs: [7, 9, 12, 15, 16, 17, 18].includes(level.id) ? [17, 27, 36] : [],

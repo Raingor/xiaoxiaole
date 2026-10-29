@@ -1,3 +1,4 @@
+import { CHARACTER_COUNT } from './catalog';
 import { describe, it, expect } from 'vitest';
 import { Game, LEVELS, findMatches, adjacent, levelRoster, type Tile, type Special } from './engine';
 
@@ -173,6 +174,6 @@ describe('熊熊炸弹与造型身份', () => {
   });
   it('六角色旧档会补齐新造型的收集计数，不丢原进度', () => {
     const game=new Game(LEVELS[0],rng(1));const old=game.serialize();old.collected=Array(6).fill(1);
-    const restored=Game.restore(old)!;expect(restored.collected).toHaveLength(9);expect(restored.collected.slice(0,6)).toEqual(old.collected);expect(restored.collected.slice(6)).toEqual([0,0,0]);
+    const restored=Game.restore(old)!;expect(restored.collected).toHaveLength(CHARACTER_COUNT);expect(restored.collected.slice(0,6)).toEqual(old.collected);expect(restored.collected.slice(6)).toEqual(Array(CHARACTER_COUNT-6).fill(0));
   });
 });

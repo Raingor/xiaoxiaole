@@ -1,0 +1,27 @@
+{
+  "momonga": {
+    "page": "https://chiikawamarket.jp/collections/momonga",
+    "url": "https://chiikawamarket.jp/cdn/shop/collections/04momonga.png",
+    "file": "references/characters/momonga-official.png"
+  },
+  "kurimanju": {
+    "page": "https://chiikawamarket.jp/collections/kurimanju",
+    "url": "https://chiikawamarket.jp/cdn/shop/collections/05kurimanju.png",
+    "file": "references/characters/kurimanju-official.png"
+  },
+  "rakko": {
+    "page": "https://chiikawamarket.jp/collections/rakko",
+    "url": "https://chiikawamarket.jp/cdn/shop/collections/06rakko.png",
+    "file": "references/characters/rakko-official.png"
+  },
+  "shisa": {
+    "page": "https://chiikawamarket.jp/collections/shisa",
+    "url": "https://chiikawamarket.jp/cdn/shop/collections/07sisa.png",
+    "file": "references/characters/shisa-official.png"
+  },
+  "furuhonya": {
+    "page": "https://chiikawamarket.jp/collections/furuhonya",
+    "url": "https://chiikawamarket.jp/cdn/shop/collections/08furuhonya.png",
+    "file": "references/characters/furuhonya-official.png"
+  }
+}

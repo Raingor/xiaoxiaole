@@ -52,7 +52,7 @@ export interface Sticker { id:string; name:string; kind:number; story:string; re
 export function album(records: Record<number, unknown>, stats: AlbumStats): Sticker[] {
   const stories = ['第一次出发，熊把小小的快乐装进口袋。','吉伊说：今天也比昨天勇敢了一点。','小八找到了一条能看见云的路线。','乌萨奇一声呀哈，樱花也跟着晃起来。','打开箱子，原来朋友一直在等你。','融掉冰块，薄荷汽水刚刚好。','鼹鼠饼把最后一口点心留给朋友。','列车进站，带来一份意外的小礼物。','彩虹落进野餐篮，变成甜甜的糖。','老头狗慢悠悠地说：玩得不错嘛。','银河很远，好朋友就在身边。','终点也是下一趟旅程的起点。','小黄鸭雨衣，接住每一滴小雨。','雨停以后，快乐亮晶晶。','睡衣熊决定把今天的开心带进梦里。','把星星放在枕边，晚安也会发光。','忍者熊悄悄出现：惊喜到了。','大家穿着最喜欢的衣服，再跳一支舞。'];
   const kinds = [0,1,2,3,1,0,4,0,2,5,4,5,6,6,7,7,8,8];
-  return [...LEVELS.map((l,i)=>({id:`station-${l.id}`,name:l.name,kind:kinds[i],story:stories[i],requirement:`通过第 ${l.id} 站`,earned:!!records[l.id]})),
+  return [...LEVELS.map((l,i)=>({id:`station-${l.id}`,name:l.name,kind:l.stickerKind ?? kinds[i],story:l.story ?? stories[i],requirement:`通过第 ${l.id} 站`,earned:!!records[l.id]})),
     {id:'combo-3',name:'拍手小能手',kind:0,story:'一次消除接着一次，熊忍不住为你鼓掌。',requirement:'达成 3 连消',earned:stats.maxCombo>=3},
     {id:'combo-5',name:'快乐舞步',kind:0,story:'五连消的节奏，正好跳一支小舞。',requirement:'达成 5 连消',earned:stats.maxCombo>=5},
     {id:'combo-8',name:'稀有狂欢',kind:8,story:'传说中的八连消，连忍者熊也跑来庆祝。',requirement:'达成 8 连消',earned:stats.maxCombo>=8},

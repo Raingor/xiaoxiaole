@@ -29,7 +29,7 @@ try {
   const controlSave = await page.evaluate(async () => {
     const { Game, LEVELS } = await import('/src/engine.ts');
     const s = JSON.parse(localStorage.getItem('rail-pop-v1'));
-    const game = new Game(LEVELS[11]); game.moves = 26; s.current = game.serialize(); return s;
+    const game = new Game(LEVELS[11], undefined, 12012); game.moves = 26; s.current = game.serialize(); return s;
   });
   await context.addInitScript(s=>{if(location.protocol.startsWith('http')&&!sessionStorage.getItem('controls-fixture')){localStorage.setItem('rail-pop-v1',JSON.stringify(s));sessionStorage.setItem('controls-fixture','1');}},controlSave);
   await page.reload(); await ready();
@@ -41,7 +41,7 @@ try {
     for (let i = 0; i < 63; i++) if (adjacent(i, i + 1) && !valid.some(([a, b]) => a === i && b === i + 1)) { bad = [i, i + 1]; break; }
     return { good: valid[0], bad };
   });
-  await cell(moves.bad[0]).click(); await cell(moves.bad[1]).click(); await page.waitForTimeout(650);
+  await cell(moves.bad[0]).click(); await cell(moves.bad[1]).click(); await page.waitForFunction(()=>!document.querySelector('.swapping'));
   check('invalid exchange does not spend a move or score', (await state()).current.moves === 26 && (await state()).current.score === 0);
   await click('hint'); check('free hint highlights exactly two tiles', await page.locator('.tile.hint').count() === 2);
   check('hint is free', (await state()).current.moves === 26);
@@ -67,11 +67,11 @@ try {
   await stable(() => JSON.parse(localStorage.getItem('rail-pop-v1')).inventory.shuffle === 2);
   check('shuffle preserves score and moves', (await state()).current.score === beforeShuffle.score && (await state()).current.moves === beforeShuffle.moves);
   await click('map');
-  check('map has 18 stations and locks future levels', await page.locator('.station').count() === 18 && await page.locator('.station[disabled]').count() === 17);
+  check('map has 38 stations and locks future levels', await page.locator('.station').count() === 38 && await page.locator('.station[disabled]').count() === 37);
   await mkdir('artifacts', { recursive: true });
   await page.screenshot({ path: 'artifacts/journey-map.png', fullPage: true });
   await page.keyboard.press('Escape'); await click('friends');
-  check('collection displays six original characters and three outfits', await page.locator('.friend-card').count() === 9);
+  check('collection displays nineteen characters and outfits', await page.locator('.friend-card').count() === 19);
   await click('close'); await click('help');
   check('help explains special combinations and keyboard controls', (await page.locator('.help-list').textContent()).includes('双彩虹') && (await page.locator('.help-list').textContent()).includes('Shift'));
   await page.keyboard.press('Escape');

@@ -1,6 +1,6 @@
 import '@fontsource-variable/nunito';
 import './style.css';
-import { Game, LEVELS, adjacent, type Goal, type Wave } from './engine';
+import { Game, LEVELS, adjacent, levelRoster, type Goal, type Wave } from './engine';
 import { FRIENDS, loadPortraits } from './friends';
 import { icon, directionIcon } from './icons';
 import { preloadCelebration, victoryCelebration } from './celebration';
@@ -105,7 +105,7 @@ function specialName(s: string) { return ({ row: '横向直线', column: '纵向
 function renderStats() {
   document.body.dataset.theme = game.level.theme ?? 'sunny';
   $('#trip-theme').textContent = ({sunny:'☀ 晴日出发',picnic:'✿ 野餐时光',rain:'☂ 雨后小路',night:'☾ 睡衣派对'})[game.level.theme ?? 'sunny'];
-  $('#album-count').textContent = `${album(save.records,save.stats).filter(s=>s.earned).length} / 24`;
+  $('#album-count').textContent = `${album(save.records,save.stats).filter(s=>s.earned).length} / ${album(save.records,save.stats).length}`;
   $('#return-campaign').hidden = !mode;
   $('#activity-banner').hidden = !mode;
   $('#activity-banner').textContent = mode ? `${mode.type === 'daily' ? `每日挑战 · ${mode.date}` : '好友同棋盘挑战'} · ${game.level.name} · 免费提示，挑战中不使用道具${mode.benchmark ? ` · 好友 ${mode.benchmark.used} 步 / ${mode.benchmark.score.toLocaleString()} 分` : ''}` : '';
@@ -429,7 +429,7 @@ window.addEventListener('pagehide', () => { if (!busy) persist(); });
 
 async function init() {
   preloadCelebration();
-  try { portraits = await loadPortraits(); }
+  try { portraits = await loadPortraits(levelRoster(game.level)); }
   catch (err) {
     console.error('角色加载失败', err);
     $('#loading').innerHTML = `<b>角色暂时没有准备好</b><span>请刷新页面，再一起出发</span><button class="primary-button" onclick="location.reload()">重新加载</button>`;

@@ -19,7 +19,7 @@ async function open(save=defaultSave(),url=base){
 const identity=g=>g.board.map(t=>t?{kind:t.kind,special:t.special}:null);
 try{
   await mkdir('artifacts',{recursive:true});
-  let t=await open();await t.click('album');check('24 collectible stickers start locked',await t.page.locator('.album-sticker').count()===24&&await t.page.locator('.album-sticker.earned').count()===0);await t.page.waitForTimeout(400);await t.page.screenshot({path:'artifacts/album-mobile.png',fullPage:true});await t.context.close();
+  let t=await open();await t.click('album');check('44 collectible stickers start locked',await t.page.locator('.album-sticker').count()===44&&await t.page.locator('.album-sticker.earned').count()===0);await t.page.waitForTimeout(400);await t.page.screenshot({path:'artifacts/album-mobile.png',fullPage:true});await t.context.close();
   const rescue=await build(5),cages=rescue.cages.map(n=>n?1:0);rescue.cages=cages;
   t=await open({...defaultSave(),unlocked:5,current:rescue});check('rescue station renders two crates',await t.page.locator('.rescue-box').count()===2);
   await t.click('hammer');await t.page.locator('[data-cell="18"]').click();await t.page.waitForFunction(()=>JSON.parse(localStorage.getItem('rail-pop-v1')).stats.rescues>=1);

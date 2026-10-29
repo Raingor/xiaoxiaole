@@ -1,0 +1,127 @@
+{
+  "mode": "built-in image_gen",
+  "transparent_background": true,
+  "date": "2026-10-30",
+  "assets": [
+    {
+      "id": "kurimanju",
+      "name": "栗子馒头",
+      "unlockLevel": 19,
+      "color": "#c49a78",
+      "ref": "kurimanju",
+      "detail": "Kuri-manju / 栗子馒头: pale warm beige rounded head, tiny side ears, a single broad CHESTNUT BROWN semicircular patch over the TOP of head, black eyes with small white crescent highlights, pink oval cheeks each with three short black hatch marks, tiny omega mouth plus tiny lower lip. No animal nose or hair tuft. Preserve the simple chestnut hairstyle silhouette.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/references/characters/kurimanju-official.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a published official character reference. Preserve this character identity and distinctive markings, but redraw as one clean high quality game sprite. Kuri-manju / 栗子馒头: pale warm beige rounded head, tiny side ears, a single broad CHESTNUT BROWN semicircular patch over the TOP of head, black eyes with small white crescent highlights, pink oval cheeks each with three short black hatch marks, tiny omega mouth plus tiny lower lip. No animal nose or hair tuft. Preserve the simple chestnut hairstyle silhouette. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-baa2c9cc-233c-4905-8a9c-10eb186e492f.png",
+      "destination": "public/characters-2d/kurimanju.png"
+    },
+    {
+      "id": "momonga",
+      "name": "飞鼠",
+      "unlockLevel": 21,
+      "color": "#c8dce9",
+      "ref": "momonga",
+      "detail": "Momonga / 飞鼠: white flying squirrel head, TWO tall broad round white ears with pale powder blue interiors, short fluffy cheek tufts at the sides, very small pale blue round forehead spot between large cheeky narrowed oval black eyes with white crescent shine, pink hatched cheeks, tiny omega mouth. Keep the white furry cheeks and tall blue-inner ears recognizable, no rabbit-like narrow ears.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/references/characters/momonga-official.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a published official character reference. Preserve this character identity and distinctive markings, but redraw as one clean high quality game sprite. Momonga / 飞鼠: white flying squirrel head, TWO tall broad round white ears with pale powder blue interiors, short fluffy cheek tufts at the sides, very small pale blue round forehead spot between large cheeky narrowed oval black eyes with white crescent shine, pink hatched cheeks, tiny omega mouth. Keep the white furry cheeks and tall blue-inner ears recognizable, no rabbit-like narrow ears. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-c5570727-c64b-4e7a-9f5b-397edc2306f6.png",
+      "destination": "public/characters-2d/momonga.png"
+    },
+    {
+      "id": "rakko",
+      "name": "海獭",
+      "unlockLevel": 23,
+      "color": "#d6bd85",
+      "ref": "rakko",
+      "detail": "Rakko / 海獭: warm pale cream-yellow otter head with small round side ears, short jagged/scruffy fur outline at top and cheeks, a DISTINCT four-pointed light brown STAR-SHAPED SCAR above the eye on viewer LEFT, large black oval eyes with white crescent shine, pink hatched cheeks, tiny omega mouth. Show the ENTIRE head silhouette even though the official reference crops the sides. No sword, no body, no extra clothes.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/references/characters/rakko-official.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a published official character reference. Preserve this character identity and distinctive markings, but redraw as one clean high quality game sprite. Rakko / 海獭: warm pale cream-yellow otter head with small round side ears, short jagged/scruffy fur outline at top and cheeks, a DISTINCT four-pointed light brown STAR-SHAPED SCAR above the eye on viewer LEFT, large black oval eyes with white crescent shine, pink hatched cheeks, tiny omega mouth. Show the ENTIRE head silhouette even though the official reference crops the sides. No sword, no body, no extra clothes. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-29299ea9-458a-4a42-8ea3-563c5d59ef83.png",
+      "destination": "public/characters-2d/rakko.png"
+    },
+    {
+      "id": "shisa",
+      "name": "狮萨",
+      "unlockLevel": 25,
+      "color": "#ecb47e",
+      "ref": "shisa",
+      "detail": "Shisa / 狮萨: pale butter cream round lion-dog head, two small pointed upright ears, a scalloped ORANGE MANE visible along BOTH side edges, TWO distinctive orange curled eyebrow swirls above black eyes with white crescent shine, pink hatched cheeks and tiny omega mouth. Curly orange eyebrows and mane clearly visible. Not a generic lion cub.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/references/characters/shisa-official.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a published official character reference. Preserve this character identity and distinctive markings, but redraw as one clean high quality game sprite. Shisa / 狮萨: pale butter cream round lion-dog head, two small pointed upright ears, a scalloped ORANGE MANE visible along BOTH side edges, TWO distinctive orange curled eyebrow swirls above black eyes with white crescent shine, pink hatched cheeks and tiny omega mouth. Curly orange eyebrows and mane clearly visible. Not a generic lion cub. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-e010a7db-ef67-4d51-8fe7-3c0a3fd77ea5.png",
+      "destination": "public/characters-2d/shisa.png"
+    },
+    {
+      "id": "furuhonya",
+      "name": "古本屋",
+      "unlockLevel": 27,
+      "color": "#e5afb9",
+      "ref": "furuhonya",
+      "detail": "Furuhonya / 古本屋 / Kani: pale blush pink round head with darker rose pink cap-like patch on TOP, TWO small pink CRAB-CLAW shaped appendages sticking upright from the top sides (not ordinary bear ears), delicate short curved eyebrows, black oval eyes with white crescent shine, pink oval cheeks each with three short hatch marks, tiny omega mouth. Sweet shy expression. Only the head, no books.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/references/characters/furuhonya-official.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a published official character reference. Preserve this character identity and distinctive markings, but redraw as one clean high quality game sprite. Furuhonya / 古本屋 / Kani: pale blush pink round head with darker rose pink cap-like patch on TOP, TWO small pink CRAB-CLAW shaped appendages sticking upright from the top sides (not ordinary bear ears), delicate short curved eyebrows, black oval eyes with white crescent shine, pink oval cheeks each with three short hatch marks, tiny omega mouth. Sweet shy expression. Only the head, no books. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-58cf0291-c4a5-447e-bc59-a1c348be9d20.png",
+      "destination": "public/characters-2d/furuhonya.png"
+    },
+    {
+      "id": "bear-strawberry",
+      "name": "草莓熊",
+      "unlockLevel": 29,
+      "color": "#e69caa",
+      "ref": "classic",
+      "detail": "Dress the exact white Joke Bear face in a vivid soft strawberry-red HOOD. A crown of five simple fresh green leaf points and tiny short stem sits on top, a few tiny cream seed dots on the red fabric around the cheeks. Plain white face visible inside the hood. Keep round bear ears as side hood bumps. Clear red and green strawberry silhouette.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/public/characters-2d/classic.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a previously approved Joke Bear HEAD, use as exact identity and line-style reference. Preserve the white rounded pillow-shaped bear face, two round ears, two tiny solid black DOT eyes, black triangular nose connected to a small w mouth; no blush or eyebrows. Dress the exact white Joke Bear face in a vivid soft strawberry-red HOOD. A crown of five simple fresh green leaf points and tiny short stem sits on top, a few tiny cream seed dots on the red fabric around the cheeks. Plain white face visible inside the hood. Keep round bear ears as side hood bumps. Clear red and green strawberry silhouette. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-344f5c7b-4025-49af-9700-01fc10f18d62.png",
+      "destination": "public/characters-2d/bear-strawberry.png"
+    },
+    {
+      "id": "bear-frog",
+      "name": "青蛙熊",
+      "unlockLevel": 31,
+      "color": "#97c77b",
+      "ref": "classic",
+      "detail": "Dress the exact white Joke Bear face in a fresh leaf-green FROG HOOD, with TWO big round frog-eye bumps above the head and tiny black frog-eye dots in them. Green rim frames the white bear face and a little cream lower collar. Clearly green frog costume, not the yellow raincoat hood. The bear face still has its original black dot eyes and nose-mouth.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/public/characters-2d/classic.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a previously approved Joke Bear HEAD, use as exact identity and line-style reference. Preserve the white rounded pillow-shaped bear face, two round ears, two tiny solid black DOT eyes, black triangular nose connected to a small w mouth; no blush or eyebrows. Dress the exact white Joke Bear face in a fresh leaf-green FROG HOOD, with TWO big round frog-eye bumps above the head and tiny black frog-eye dots in them. Green rim frames the white bear face and a little cream lower collar. Clearly green frog costume, not the yellow raincoat hood. The bear face still has its original black dot eyes and nose-mouth. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-c44b0997-eccb-43bc-a4e9-e9ea4b98dfb1.png",
+      "destination": "public/characters-2d/bear-frog.png"
+    },
+    {
+      "id": "bear-astronaut",
+      "name": "太空熊",
+      "unlockLevel": 33,
+      "color": "#a4c9d9",
+      "ref": "classic",
+      "detail": "Dress the exact white Joke Bear face in a SPACE HELMET: a thick rounded ivory helmet rim, pale sky-blue circular glass frame surrounding the unobscured white bear face, two small simple side earpieces, a tiny orange lower helmet button. No reflections over eyes. A broad cool blue outer helmet ring and small lavender side accents make it distinct. It is a helmet around the bear head, no full spacesuit or body.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/public/characters-2d/classic.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a previously approved Joke Bear HEAD, use as exact identity and line-style reference. Preserve the white rounded pillow-shaped bear face, two round ears, two tiny solid black DOT eyes, black triangular nose connected to a small w mouth; no blush or eyebrows. Dress the exact white Joke Bear face in a SPACE HELMET: a thick rounded ivory helmet rim, pale sky-blue circular glass frame surrounding the unobscured white bear face, two small simple side earpieces, a tiny orange lower helmet button. No reflections over eyes. A broad cool blue outer helmet ring and small lavender side accents make it distinct. It is a helmet around the bear head, no full spacesuit or body. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-507fe122-ff85-4ee1-9d88-248e381b46b8.png",
+      "destination": "public/characters-2d/bear-astronaut.png"
+    },
+    {
+      "id": "bear-chef",
+      "name": "厨师熊",
+      "unlockLevel": 35,
+      "color": "#d8bb8d",
+      "ref": "classic",
+      "detail": "Dress the exact white Joke Bear face with a tall puffy WHITE CHEF TOQUE on top, with three broad rounded lobes and a cream/beige hat band. Both round bear ears remain visible at sides under the toque. A small warm terracotta red neckerchief knot is visible at bottom of the head. No food props, no body. Distinct tall white chef hat silhouette.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/public/characters-2d/classic.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a previously approved Joke Bear HEAD, use as exact identity and line-style reference. Preserve the white rounded pillow-shaped bear face, two round ears, two tiny solid black DOT eyes, black triangular nose connected to a small w mouth; no blush or eyebrows. Dress the exact white Joke Bear face with a tall puffy WHITE CHEF TOQUE on top, with three broad rounded lobes and a cream/beige hat band. Both round bear ears remain visible at sides under the toque. A small warm terracotta red neckerchief knot is visible at bottom of the head. No food props, no body. Distinct tall white chef hat silhouette. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-cc9ea81a-91f6-4e11-886c-d87a00fb051b.png",
+      "destination": "public/characters-2d/bear-chef.png"
+    },
+    {
+      "id": "bear-pirate",
+      "name": "海盗熊",
+      "unlockLevel": 37,
+      "color": "#aa899d",
+      "ref": "classic",
+      "detail": "Dress the exact white Joke Bear face in a dark charcoal PIRATE TRICORN HAT with warm gold trim and a small simple gold four-point star badge on front, NO skull symbol. Burgundy red bandana tails at one side. Keep BOTH of the original black dot eyes visible, NO eyepatch. White face and round ears peek under the hat, no body or weapons. Broad dark pirate hat is the distinctive silhouette.",
+      "reference": "/Users/raingor_ye/wwwroot/M-my-project/xiaoxiaole/public/characters-2d/classic.png",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D HEAD portrait for a match-three puzzle game. Input image is a previously approved Joke Bear HEAD, use as exact identity and line-style reference. Preserve the white rounded pillow-shaped bear face, two round ears, two tiny solid black DOT eyes, black triangular nose connected to a small w mouth; no blush or eyebrows. Dress the exact white Joke Bear face in a dark charcoal PIRATE TRICORN HAT with warm gold trim and a small simple gold four-point star badge on front, NO skull symbol. Burgundy red bandana tails at one side. Keep BOTH of the original black dot eyes visible, NO eyepatch. White face and round ears peek under the hat, no body or weapons. Broad dark pirate hat is the distinctive silhouette. Style: bold near-black rounded hand-drawn outlines and FLAT solid pastel color fills, matching the simple Chiikawa/Joke Bear game portraits. Head ONLY, front facing, single centered fully visible head, fill 85 percent of a SQUARE canvas, generous transparent padding. Very readable at 40 pixels; small facial features stay crisp. True transparent alpha background, no background color, NO rectangular background, no scene, no shadow, no text or watermark, no frame. No 3D, no plush/fur texture, no shading or gradients. Do not include any other character or multiple poses.",
+      "source": "/Users/raingor_ye/.codex/generated_images/01a17395-8072-72d0-bd0a-534eb879094e/exec-7d4097a5-8cf1-464d-84bd-45fee40778e3.png",
+      "destination": "public/characters-2d/bear-pirate.png"
+    }
+  ]
+}

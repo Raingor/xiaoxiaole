@@ -80,7 +80,7 @@ describe('可复现每日与好友挑战',()=>{
     expect(betterResult({used:10,score:6000},{used:10,score:5000})).toBe(true);
     expect(betterResult({used:12,score:12000},{used:10,score:5000})).toBe(false);
     const cards=album({1:{}},{maxCombo:5,rescues:2,rides:1,dailyClears:1});
-    expect(cards).toHaveLength(24);expect(cards.find(s=>s.id==='combo-8')?.earned).toBe(false);expect(cards.filter(s=>s.earned)).toHaveLength(6);
+    expect(cards).toHaveLength(LEVELS.length+6);expect(cards.find(s=>s.id==='combo-8')?.earned).toBe(false);expect(cards.filter(s=>s.earned)).toHaveLength(6);
   });
   it('拒绝损坏的新存档字段，并兼容没有趣味字段的旧规则2存档',()=>{
     const g=new Game(LEVELS[4],undefined,5),s=g.serialize();
