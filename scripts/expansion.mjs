@@ -34,5 +34,8 @@ try{
   await p.keyboard.press('Escape');await p.locator('[data-action="album"]').first().click();check('forty-four album cards have complete labels',await p.locator('.album-sticker').count()===44&&!(await p.locator('.album-grid').textContent()).includes('undefined'));await c.close();
   const old=await builder.evaluate(async()=>{const{Game,LEVELS}=await import('/src/engine.ts');const g=new Game(LEVELS[17],undefined,185);g.score=1234;g.moves=12;const s=g.serialize();s.collected=Array(9).fill(1);return s;});
   ({c,p}=await pageFor({...defaults(),unlocked:18,current:old}));const restored=await p.evaluate(()=>JSON.parse(localStorage.getItem('rail-pop-v1')).current);assert.deepEqual(restored.board,old.board);check('old nine-character save keeps board and pads to nineteen',restored.collected.length===19&&restored.score===1234&&restored.moves===12);await p.locator('[data-action="friends"]').first().click();check('ten new identities stay locked before station nineteen',await p.locator('.friend-locked').count()===10);await c.close();
+  ({c,p}=await pageFor({...defaults(),unlocked:18,records:{18:{score:12000,stars:3}}}));
+  const migrated=await p.evaluate(()=>JSON.parse(localStorage.getItem('rail-pop-v1')));
+  check('players who cleared old final station can start station nineteen immediately',migrated.unlocked===19&&migrated.current.level===19&&migrated.records[18].score===12000);await c.close();
   check('no missing resources or browser exceptions',!errors.length&&!bad.length);await writeFile('artifacts/expansion-report.json',JSON.stringify({results,errors,bad},null,2));console.log(`Completed ${results.length} expansion checks.`);
 }finally{await browser.close();}

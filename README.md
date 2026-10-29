@@ -6,7 +6,7 @@
 
 五位伙伴参考来自 [Chiikawa Market 官方角色目录](https://chiikawamarket.jp/collections)，下载依据在 `references/characters/expansion-sources.json`。10张独立透明PNG使用内置image_gen制作，位于 `public/characters-2d/`；完整提示词和原始生成路径在 `references/characters/expansion-prompts.json`。原9个身份索引、旧18关和RP2挑战逻辑保留，旧存档收集计数自动补齐19种。
 
-首屏只等待当前阵容及欢迎插画；未来角色在实际显示时加载。新增20张站点贴纸与对应故事，收集册总数44张。新增规则检查在 `src/expansion.test.ts`，角色扩展浏览器检查执行 `node scripts/expansion.mjs`（先启动开发服务）。
+首屏只等待当前阵容及欢迎插画；未来角色在实际显示时加载。新增20张站点贴纸与对应故事，收集册总数44张。已通关旧终点第18站的玩家会自动解锁第19站，无需重复通关。新增规则检查在 `src/expansion.test.ts`，角色扩展浏览器检查执行 `node scripts/expansion.mjs`（先启动开发服务）。
 
 目前共有38关、19种独立角色/造型。43项规则测试覆盖38关共3,800步模拟，以及救援、列车、主题目标、种子棋盘与挑战码。
 

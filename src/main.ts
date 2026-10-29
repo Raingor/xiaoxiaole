@@ -31,6 +31,10 @@ try {
       const record = raw.records?.[level.id];
       if (record && Number.isFinite(record.score) && record.score >= 0 && Number.isInteger(record.stars) && record.stars >= 1 && record.stars <= 3) save.records[level.id] = { score: record.score, stars: record.stars };
     }
+    // An old release capped unlocked at its final station. A valid clear record
+    // should also unlock the next station introduced by a later release.
+    const highestClear = Math.max(0, ...Object.keys(save.records).map(Number));
+    save.unlocked = Math.max(save.unlocked, Math.min(LEVELS.length, highestClear + 1));
   }
 } catch { /* Start fresh when local storage is unavailable or malformed. */ }
 
