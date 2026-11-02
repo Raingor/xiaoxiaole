@@ -114,3 +114,5 @@
 
 - 采用256px头像、384px全身插画，缩放后以无损WebP保留透明度；21张资源由19,382,625字节降至780,044字节（96.0%），PNG原稿保留。
 - 首关关键头像仅85,414字节；庆祝GIF改为首次交互后预热，侧栏插画lazy，消除启动依赖。依据：https://web.dev/learn/images/performance-issues 。
+
+- 优化f66b9b6已发布，Actions41471524813成功；真实Pages冷上下文首轮可玩2,760ms，首屏无PNG/GIF、19张WebP全部解码、真实交换得分通过，HTTP200且资源失败/页面异常为0（artifacts/live-startup-report.json）。
