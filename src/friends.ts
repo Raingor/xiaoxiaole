@@ -2,16 +2,29 @@ import { CHARACTERS } from './catalog';
 export const FRIENDS = CHARACTERS;
 
 
-export async function loadPortraits(requiredKinds = FRIENDS.map((_,i)=>i)): Promise<Record<string, string>> {
+export const portraitUrl = (id: string) => `${import.meta.env.BASE_URL}characters-2d/${id}.webp`;
+
+export async function loadPortraits(requiredKinds = FRIENDS.map((_,i)=>i), onProgress?: (loaded: number, total: number) => void): Promise<Record<string, string>> {
   const cache: Record<string, string> = {};
   for (const id of [...FRIENDS.map(friend => friend.id), 'classic-full', 'usagi-full']) {
-    cache[id] = `${import.meta.env.BASE_URL}characters-2d/${id}.png`;
+    cache[id] = portraitUrl(id);
   }
-  // Future identities load when displayed, so a first-time player only waits for
-  // the current roster and the two welcome illustrations.
-  await Promise.all([...new Set([...requiredKinds.map(kind=>FRIENDS[kind].id), 'classic-full', 'usagi-full'])].map(async id => {
-    const url = `${import.meta.env.BASE_URL}characters-2d/${id}.png`;
-    const image = new Image(); image.src = url; await image.decode();
-  }));
+  // Only playable identities block entry. Hidden side art and future friends
+  // are loaded by their own DOM images when actually displayed.
+  const ids = [...new Set(requiredKinds.map(kind=>FRIENDS[kind].id))];
+  let loaded = 0, failed = false;
+  onProgress?.(0, ids.length);
+  try {
+    await Promise.all(ids.map(async id => {
+      const image = new Image();
+      image.fetchPriority = 'high';
+      image.src = cache[id];
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      try {
+        await Promise.race([image.decode(), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Portrait timed out: ${id}`)), 20000); })]);
+        if (!failed) onProgress?.(++loaded, ids.length);
+      } finally { clearTimeout(timer); }
+    }));
+  } catch (error) { failed = true; throw error; }
   return cache;
 }

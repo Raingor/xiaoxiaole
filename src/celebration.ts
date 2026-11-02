@@ -1,10 +1,13 @@
 import './celebration.css';
 import { icon } from './icons';
+import { portraitUrl } from './friends';
 
 const cheerPortrait = `${import.meta.env.BASE_URL}characters-2d/joke-bear-victory.gif`;
 
+let warmed = false;
 export function preloadCelebration() {
-  // Warm the cache without making this decorative image block the game.
+  if (warmed || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  warmed = true;
   for (const src of [cheerPortrait, `${import.meta.env.BASE_URL}characters-2d/joke-bear-clap.gif`, `${import.meta.env.BASE_URL}characters-2d/joke-bear-rare.gif`]) {
     const image = new Image(); image.src = src;
   }
@@ -24,7 +27,7 @@ export function victoryCelebration() {
       <div class="victory-confetti-cloud">${confetti}</div>
       <span class="victory-spark victory-spark-left">${icon('star')}</span>
       <span class="victory-spark victory-spark-right">${icon('star')}</span>
-      <img class="victory-bear" src="${cheerPortrait}" width="200" height="172" alt="" draggable="false" /><img class="victory-bear-static" src="${import.meta.env.BASE_URL}characters-2d/classic-full.png" width="160" height="160" alt="" draggable="false" />
+      <img class="victory-bear" src="${cheerPortrait}" width="200" height="172" alt="" draggable="false" /><img class="victory-bear-static" src="${portraitUrl('classic-full')}" width="160" height="160" alt="" draggable="false" />
       <span class="victory-cheer">太棒啦！</span>
     </div>
   </div><a class="victory-source" href="https://tenor.com/view/joke-bear-dance-dancing-happy-happy-dance-gif-16210144" target="_blank" rel="noopener noreferrer">Joke Bear · Tenor ↗</a>`;

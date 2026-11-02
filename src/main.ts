@@ -1,7 +1,7 @@
 import '@fontsource-variable/nunito';
 import './style.css';
 import { Game, LEVELS, adjacent, levelRoster, type Goal, type Wave } from './engine';
-import { FRIENDS, loadPortraits } from './friends';
+import { FRIENDS, loadPortraits, portraitUrl } from './friends';
 import { icon, directionIcon } from './icons';
 import { preloadCelebration, victoryCelebration } from './celebration';
 import './features.css';
@@ -74,7 +74,7 @@ app.innerHTML = `
         <div class="board-caption"><span>${icon('shuffle')} 交换相邻伙伴，三个相同即可消除</span><button data-action="hint">${icon('bulb')} 给我提示</button></div>
         <div class="boosters"><div class="booster-label"><b>快乐<br>小帮手</b><span>BOOSTERS</span></div><button class="booster" data-action="hammer"><span class="booster-art hammer">${icon('hammer')}</span><span>小木锤</span><em id="count-hammer">3</em></button><button class="booster" data-action="shuffle"><span class="booster-art shuffle">${icon('shuffle')}</span><span>大洗牌</span><em id="count-shuffle">3</em></button><button class="booster" data-action="wand"><span class="booster-art wand">${icon('wand')}</span><span>魔法棒</span><em id="count-wand">2</em></button><button class="booster" data-action="moves"><span class="booster-art plus">${icon('plus')}<b>5</b></span><span>加五步</span><em id="count-moves">2</em></button></div>
       </section>
-      <aside class="right-column"><section class="friends-postcard"><div class="postcard-kicker"><span>老朋友 · 新玩法</span><span>✦</span></div><h2>熟悉的伙伴，<br>不一样的快乐。</h2><div class="hero-friends"><span class="speech-bubble">呀哈！一起出发！</span><span class="hero-spark spark-one">✧</span><span class="hero-spark spark-two">✦</span><div class="platform"></div><img id="hero-bear" alt="地铁快跑的自嘲熊"/><img id="hero-usagi" alt="地铁快跑的乌萨奇"/></div><p>地铁快跑的小伙伴们<br>这次陪你慢慢玩。</p><button data-action="friends">认识全部伙伴 ${icon('arrow')}</button></section><section class="tips-card"><div class="section-heading"><h3>消除小灵感</h3>${icon('bulb')}</div><div class="tip-row"><span class="special-demo line-demo">${directionIcon('row')}</span><div><b>四个连一线</b><p>变成直线特效，扫走一整排</p></div></div><div class="tip-row"><span class="special-demo bomb-demo">${bearBomb()}</span><div><b>拼出 L 型或 T 型</b><p>变成熊熊炸弹，清除周围3×3</p></div></div><div class="tip-row"><span class="special-demo rainbow-demo">✦</span><div><b>五个连一线</b><p>彩虹特效，消除全盘同色</p></div></div><button class="text-link" data-action="help">还有更多小技巧 ${icon('chevron')}</button></section><div class="small-message"><span>✿</span> 不赶时间，开心就好。</div></aside>
+      <aside class="right-column"><section class="friends-postcard"><div class="postcard-kicker"><span>老朋友 · 新玩法</span><span>✦</span></div><h2>熟悉的伙伴，<br>不一样的快乐。</h2><div class="hero-friends"><span class="speech-bubble">呀哈！一起出发！</span><span class="hero-spark spark-one">✧</span><span class="hero-spark spark-two">✦</span><div class="platform"></div><img loading="lazy" decoding="async" width="384" height="384" id="hero-bear" alt="地铁快跑的自嘲熊"/><img loading="lazy" decoding="async" width="384" height="384" id="hero-usagi" alt="地铁快跑的乌萨奇"/></div><p>地铁快跑的小伙伴们<br>这次陪你慢慢玩。</p><button data-action="friends">认识全部伙伴 ${icon('arrow')}</button></section><section class="tips-card"><div class="section-heading"><h3>消除小灵感</h3>${icon('bulb')}</div><div class="tip-row"><span class="special-demo line-demo">${directionIcon('row')}</span><div><b>四个连一线</b><p>变成直线特效，扫走一整排</p></div></div><div class="tip-row"><span class="special-demo bomb-demo">${bearBomb()}</span><div><b>拼出 L 型或 T 型</b><p>变成熊熊炸弹，清除周围3×3</p></div></div><div class="tip-row"><span class="special-demo rainbow-demo">✦</span><div><b>五个连一线</b><p>彩虹特效，消除全盘同色</p></div></div><button class="text-link" data-action="help">还有更多小技巧 ${icon('chevron')}</button></section><div class="small-message"><span>✿</span> 不赶时间，开心就好。</div></aside>
     </div>
   </main>
   <footer><span>RAIL POP</span><i></i> 让每一次消除，都成为小小的治愈。<span class="footer-right">和伙伴一起 · 快乐到站 ${icon('train')}</span></footer>
@@ -86,7 +86,7 @@ function persist() {
 }
 function photo(kind: number, cls = '') { return `<img class="${cls}" data-character="${FRIENDS[kind].id}" src="${portraits[FRIENDS[kind].id] ?? ''}" alt="${FRIENDS[kind].name}" draggable="false"/>`; }
 function bearBomb() {
-  return `<span class="bear-bomb-art" aria-label="熊熊炸弹"><img src="${import.meta.env.BASE_URL}characters-2d/classic.png" alt="熊熊炸弹" draggable="false"/><svg class="bomb-fuse" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21c0-9 9-3 9-11" stroke="#5d4c3b" stroke-width="3" stroke-linecap="round"/><path d="m14 2 1.5 4 4-2-2 4 4 1.5-4 1.5 1 4-4-2-2 4-.5-5-4-1.5 4-1.5z" fill="#f3ae48" stroke="#b87632" stroke-width="1"/></svg></span>`;
+  return `<span class="bear-bomb-art" aria-label="熊熊炸弹"><img src="${portraitUrl('classic')}" alt="熊熊炸弹" draggable="false"/><svg class="bomb-fuse" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21c0-9 9-3 9-11" stroke="#5d4c3b" stroke-width="3" stroke-linecap="round"/><path d="m14 2 1.5 4 4-2-2 4 4 1.5-4 1.5 1 4-4-2-2 4-.5-5-4-1.5 4-1.5z" fill="#f3ae48" stroke="#b87632" stroke-width="1"/></svg></span>`;
 }
 function goalName(goal: Goal) {
   if (typeof goal.kind === 'number') return FRIENDS[goal.kind].short;
@@ -432,15 +432,23 @@ document.addEventListener('keydown', e => {
 window.addEventListener('pagehide', () => { if (!busy) persist(); });
 
 async function init() {
-  preloadCelebration();
-  try { portraits = await loadPortraits(levelRoster(game.level)); }
+  try { portraits = await loadPortraits([...levelRoster(game.level), ...(game.level.rescue?.map(box => box.kind) ?? [])], (loaded, total) => {
+    $('#loading > span:last-child').textContent = `伙伴准备中 ${loaded} / ${total}`;
+  }); }
   catch (err) {
     console.error('角色加载失败', err);
-    $('#loading').innerHTML = `<b>角色暂时没有准备好</b><span>请刷新页面，再一起出发</span><button class="primary-button" onclick="location.reload()">重新加载</button>`;
+    $('#loading').innerHTML = `<b>角色暂时没有准备好</b><span>请检查连接，再一起出发</span><button class="primary-button">重新加载</button>`;
+    $('#loading button').addEventListener('click', () => {
+      $('#loading').innerHTML = `<b>伙伴们正在进站…</b><span>重新连接中…</span>`;
+      void init();
+    }, { once: true });
     return;
   }
   $('#hero-bear').setAttribute('src', portraits['classic-full']); $('#hero-usagi').setAttribute('src', portraits['usagi-full']);
   setStatus(game.level.subtitle); renderBoard(); renderStats(); $('#loading').classList.add('loaded'); busy = false;
+  // Warm expressions on first interaction, after the board is already playable.
+  window.addEventListener('pointerdown', preloadCelebration, { once: true });
+  window.addEventListener('keydown', preloadCelebration, { once: true });
   if (game.won || game.moves === 0) await finish(game.won);
   else { if (!game.validMoves().length) game.shuffle(); renderBoard(); persist(); scheduleHint(); }
   const incoming = new URL(location.href).searchParams.get('challenge');

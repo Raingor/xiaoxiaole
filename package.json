@@ -11,7 +11,8 @@
     "test:browser": "node scripts/smoke.mjs",
     "screenshots": "node scripts/inspect.mjs",
     "portraits": "node scripts/export-portraits.mjs",
-    "test:features": "node scripts/features.mjs"
+    "test:features": "node scripts/features.mjs",
+    "test:startup": "node scripts/startup.mjs"
   },
   "dependencies": {
     "@fontsource-variable/nunito": "^5.3.0",

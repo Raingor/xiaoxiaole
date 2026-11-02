@@ -20,6 +20,8 @@
 
 将透明2D头像放入 `public/characters-2d/<id>.png`，在 `src/catalog.ts` 的 `CHARACTERS` 末尾追加身份，填写id、名字、颜色、介绍和解锁关卡。造型额外设置baseId；现有顺序对应存档kind编号，请勿重排。
 
+运行 `python3 scripts/optimize-portraits.py` 生成同名 WebP（需要 Pillow），并将 PNG 原稿和 WebP 一起提交。运行时读取 WebP。
+
 在新关卡的 `roster` 中填写参与角色索引，并添加收集目标，保持kinds与阵容长度一致。图鉴、素材加载和收集计数随目录扩充；地图、解锁上限和下一关随关卡表扩充。更多Chiikawa伙伴可以沿用同一流程，当前并未添加未经绘制的新角色。
 
 [在线试玩](https://raingor.github.io/xiaoxiaole/) · [GitHub 仓库](https://github.com/Raingor/xiaoxiaole)
@@ -71,9 +73,24 @@ npm run screenshots   # 桌面 / 手机截图输出至 artifacts/
 
 浏览器测试使用独立临时上下文和本地夹具，不影响真实玩家存档。运行时默认地址为 http://localhost:5173，可通过 GAME_URL 设置浏览器测试地址。
 
+### 首次加载性能
+
+运行时使用展示尺寸的透明 WebP，21张图片合计约0.78MB，比原始PNG减少96%。启动只等待当前棋盘角色，侧栏插画按需加载，庆祝GIF在首次交互后预热；加载失败支持原页重试。
+
+冷快取、200KB/s下载和150ms延迟的生产构建对照：可玩时间从21.4秒降到约1.8秒，启动已下载资源从4.25MB降到约0.24MB。实际耗时随网络而变化。性能回归包含资源预算、慢装饰不阻塞棋盘、失败重试：
+
+```bash
+npm run build
+npm run preview -- --port 4186 --strictPort
+# 另一个终端运行，需要本机 Google Chrome
+npm run test:startup
+```
+
+素材再生成：安装Pillow后执行 `python3 scripts/optimize-portraits.py`。生成的WebP一并提交；正常开发与Pages部署无需Python。
+
 ## 角色素材
 
-当前界面全部使用 `public/characters-2d/` 的重绘透明 PNG：六张头像和自嘲熊、乌萨奇的两张全身展示图。棋盘、关卡目标、图鉴、结算与首页统一使用 2D 黑色描边、纯色填充画风。
+当前界面使用 `public/characters-2d/` 的透明 WebP：19张头像（256px）和自嘲熊、乌萨奇两张全身图（384px）；原始透明 PNG 保留作素材原稿。棋盘、关卡目标、图鉴、结算与首页统一使用 2D 黑色描边、纯色填充画风。
 
 外观参考来自 [Chiikawa 动画官网](https://www.anime-chiikawa.jp/chara.html) 与 [Nagano 官方商店角色列表](https://nagano-market.jp/collections/)。下载的参考插画、逐一来源和完整生成提示词分别保存在 `references/characters/`、`sources.json`、`redraw-prompts.json` 中。生成方式为内置 image_gen，透明通道原样保留。
 
