@@ -160,3 +160,12 @@
 
 - Pages子路径生产构建11项启动检查完整通过（1,747ms）；手机/桌面截图目视通过。此前截图重跑期间重建dist导致后续场景资源404，顺序构建并在固定子路径复测后正常。
 - f66b9b6已推送并发布，Actions41471524813成功；真实线上HTTP200、冷启动2.76秒、首屏只取WebP、19身份图片全部解码和真实交换通过，无资源失败或浏览器异常。
+
+## 2026-11-09 AI+∞ 开发者创作大赛作品提交
+- 用户提供比赛官网截图并在 Orca 内置浏览器登录；第二步要求提交魔搭创空间可公开试玩的游戏链接，以及按模板在魔搭开发者实践发布的创作手记（含演示视频、工具应用场景与关键截图）。
+- 已按 ms-studio-deploy 流程创建公开 static 创空间 https://www.modelscope.cn/studios/Raingor/xiaoxiaole ：npm ci 后以 PAGES_BASE=./ 构建 dist，git 推送到 Studio 的 master，OpenAPI 触发 deploy；build/run 日志确认 status=Running、visibility=public，公开详情页 HTTP200，真浏览器 iframe 内 25 棋子与 3 角色全部解码。
+- 创作手记《地铁消消乐 · Rail Pop》创作手记｜38 站、19 位伙伴与一次完整的 AI 协作交付已发布：https://www.modelscope.cn/posts/438095 （提交链接 https://modelscope.cn/learn/438095 ）。按模板六段记录创意与玩法、创作过程、工具应用与体验、五个真实问题及修复、经验总结与素材来源；如实注明本作未使用 Qoder / 魔搭 API-Inference / DGX Spark。
+- 演示视频 50.6 秒、1280×800 H.264 MP4（约2MB）由 Playwright 录制真实交换、地图与图鉴后经 ffmpeg 转码，已通过文章「视频组件」嵌入；另附首关棋盘、38 站地图、19 位伙伴图鉴等关键截图。录制脚本与产物位于 .gitignore 的 artifacts/，不进入仓库。
+- 比赛 /submit 表单四项（作品名称、作品简介、魔搭创空间链接、创作手记链接）已提交；页面显示「当前期已投稿 2 个作品」，本作状态「待审核」，提交时间 2026/11/9 12:49:41。此前「霓虹轨道：无限冲刺」为同赛道已审核通过作品。
+- 本轮只新增外部平台材料与本地 artifacts，游戏源码、规则、素材及 GitHub Pages 部署均未改动。API token 仅存于权限 600 的临时文件并已删除，未写入仓库或日志。
+- 推送前复核：规则测试与生产构建在本机重跑通过；本次仅补记 progress.md 并推送 main。
